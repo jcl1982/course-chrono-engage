@@ -11,12 +11,17 @@ interface EquipmentActionsProps {
 const EquipmentActions = ({ equipmentId, onDeleteClick }: EquipmentActionsProps) => {
   const navigate = useNavigate();
 
+  const handleEditClick = () => {
+    navigate(`/driver/equipment/${equipmentId}`);
+  };
+
   return (
     <div className="flex gap-2">
       <Button
         variant="outline"
         size="icon"
-        onClick={() => navigate(`/driver/equipment/${equipmentId}`)}
+        onClick={handleEditClick}
+        title="Modifier"
       >
         <Edit className="h-4 w-4" />
       </Button>
@@ -24,6 +29,7 @@ const EquipmentActions = ({ equipmentId, onDeleteClick }: EquipmentActionsProps)
         variant="outline"
         size="icon"
         onClick={onDeleteClick}
+        title="Supprimer"
       >
         <Trash2 className="h-4 w-4" />
       </Button>

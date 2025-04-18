@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -14,10 +13,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ParticipantDetailsDialog } from "@/components/participant/ParticipantDetailsDialog";
 
 const ParticipantManager = () => {
   const { toast } = useToast();
   const [selectedParticipant, setSelectedParticipant] = useState<string | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const { data: participants, isLoading } = useQuery({
     queryKey: ["participants"],
@@ -82,7 +83,10 @@ const ParticipantManager = () => {
                         variant="outline"
                         size="sm"
                         className="border-red-500 text-red-500 hover:bg-red-950"
-                        onClick={() => setSelectedParticipant(participant.id)}
+                        onClick={() => {
+                          setSelectedParticipant(participant.id);
+                          setDetailsOpen(true);
+                        }}
                       >
                         Voir détails
                       </Button>
@@ -94,6 +98,12 @@ const ParticipantManager = () => {
           </div>
         )}
       </div>
+
+      <ParticipantDetailsDialog
+        participantId={selectedParticipant}
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+      />
     </div>
   );
 };

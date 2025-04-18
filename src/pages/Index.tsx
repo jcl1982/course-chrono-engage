@@ -5,77 +5,77 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen bg-black text-white">
+      <header className="bg-[#222222] shadow-sm border-b border-red-800">
         <div className="container mx-auto py-4 px-4 md:px-6">
-          <h1 className="text-3xl font-bold text-gray-900">Chrono Engage</h1>
-          <p className="text-gray-600">Plateforme de gestion des rallyes</p>
+          <h1 className="text-3xl font-bold text-red-500">Chrono Engage</h1>
+          <p className="text-gray-300">Plateforme de gestion des rallyes</p>
         </div>
       </header>
 
       <main className="container mx-auto py-8 px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card>
+          <Card className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors">
             <CardHeader>
-              <CardTitle>Inscription</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-red-500">Inscription</CardTitle>
+              <CardDescription className="text-gray-400">
                 Inscrivez-vous pour les prochains rallyes
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-gray-300">
                 Remplissez le formulaire d'inscription pour participer aux prochains rallyes. 
                 Fournissez les informations sur votre véhicule et vos équipements.
               </p>
             </CardContent>
             <CardFooter>
               <Link to="/registration">
-                <Button>S'inscrire</Button>
+                <Button variant="destructive" className="bg-red-700 hover:bg-red-800">S'inscrire</Button>
               </Link>
             </CardFooter>
           </Card>
 
-          <Card>
+          <Card className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors">
             <CardHeader>
-              <CardTitle>Calendrier</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-red-500">Calendrier</CardTitle>
+              <CardDescription className="text-gray-400">
                 Calendrier des prochains événements
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-gray-300">
                 Consultez le calendrier des prochains rallyes et événements. 
                 Planifiez votre saison et ne manquez aucun événement.
               </p>
             </CardContent>
             <CardFooter>
-              <Button variant="outline">Voir le calendrier</Button>
+              <Button variant="outline" className="border-red-700 text-red-500 hover:bg-red-900/20">Voir le calendrier</Button>
             </CardFooter>
           </Card>
 
-          <Card>
+          <Card className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors">
             <CardHeader>
-              <CardTitle>Résultats</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-red-500">Résultats</CardTitle>
+              <CardDescription className="text-gray-400">
                 Consultez les résultats des rallyes
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-gray-300">
                 Retrouvez les résultats des rallyes précédents. 
                 Classements, temps, et statistiques détaillées.
               </p>
             </CardContent>
             <CardFooter>
-              <Button variant="outline">Voir les résultats</Button>
+              <Button variant="outline" className="border-red-700 text-red-500 hover:bg-red-900/20">Voir les résultats</Button>
             </CardFooter>
           </Card>
         </div>
       </main>
 
-      <footer className="bg-white shadow-inner mt-8">
+      <footer className="bg-[#222222] shadow-inner mt-8 border-t border-red-800">
         <div className="container mx-auto py-6 px-4 md:px-6">
-          <p className="text-center text-gray-600">
+          <p className="text-center text-gray-400">
             © {new Date().getFullYear()} Chrono Engage - Tous droits réservés
           </p>
         </div>

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,14 +23,40 @@ export const RallyFormDialog = ({ open, onOpenChange, rally }: RallyFormDialogPr
   const isEditing = !!rally;
 
   const [formData, setFormData] = useState({
-    name: rally?.name ?? "",
-    location: rally?.location ?? "",
-    description: rally?.description ?? "",
-    start_date: rally?.start_date ?? "",
-    end_date: rally?.end_date ?? "",
-    registration_deadline: rally?.registration_deadline ?? "",
-    registration_open: rally?.registration_open ?? false,
+    name: "",
+    location: "",
+    description: "",
+    start_date: "",
+    end_date: "",
+    registration_deadline: "",
+    registration_open: false,
   });
+
+  // Mettre à jour le formulaire quand un rallye est sélectionné ou quand la boîte de dialogue s'ouvre
+  useEffect(() => {
+    if (rally && open) {
+      setFormData({
+        name: rally.name || "",
+        location: rally.location || "",
+        description: rally.description || "",
+        start_date: rally.start_date || "",
+        end_date: rally.end_date || "",
+        registration_deadline: rally.registration_deadline || "",
+        registration_open: rally.registration_open || false,
+      });
+    } else if (!rally && open) {
+      // Réinitialiser le formulaire si aucun rallye n'est sélectionné
+      setFormData({
+        name: "",
+        location: "",
+        description: "",
+        start_date: "",
+        end_date: "",
+        registration_deadline: "",
+        registration_open: false,
+      });
+    }
+  }, [rally, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

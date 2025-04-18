@@ -13,6 +13,8 @@ import { Trophy, Users, BarChart } from "lucide-react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 
 const OrganizerSpace = () => {
+  const navigate = useNavigate();
+  
   const menuItems = [
     {
       title: "Rallyes",

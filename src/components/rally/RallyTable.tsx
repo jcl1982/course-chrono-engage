@@ -12,7 +12,7 @@ import { formatDistance } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar, MapPin, Users, Pencil, Trash2 } from "lucide-react";
 import { type Database } from "@/integrations/supabase/types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { RallyFormDialog } from "./RallyFormDialog";
@@ -23,6 +23,7 @@ type Rally = Database["public"]["Tables"]["rallies"]["Row"];
 
 export const RallyTable = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [selectedRally, setSelectedRally] = useState<Rally | undefined>();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -51,6 +52,7 @@ export const RallyTable = () => {
 
       if (error) throw error;
 
+      await queryClient.invalidateQueries({ queryKey: ["rallies"] });
       toast({ title: "Rallye supprimé avec succès" });
       setIsDeleteOpen(false);
     } catch (error) {
@@ -125,6 +127,7 @@ export const RallyTable = () => {
                       className="h-8 w-8 text-red-500 hover:bg-red-950/50"
                     >
                       <Pencil className="h-4 w-4" />
+                      <span className="sr-only">Modifier le rallye</span>
                     </Button>
                     <Button
                       variant="ghost"
@@ -136,6 +139,7 @@ export const RallyTable = () => {
                       className="h-8 w-8 text-red-500 hover:bg-red-950/50"
                     >
                       <Trash2 className="h-4 w-4" />
+                      <span className="sr-only">Supprimer le rallye</span>
                     </Button>
                   </div>
                 </TableCell>

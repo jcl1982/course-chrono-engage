@@ -17,6 +17,25 @@ export type Database = {
           co_pilot_last_name: string | null
           co_pilot_license_number: string | null
           co_pilot_phone: string | null
+          copilot_gloves_brand: string | null
+          copilot_gloves_expiry_date: string | null
+          copilot_gloves_homologation: string | null
+          copilot_hans_brand: string | null
+          copilot_hans_expiry_date: string | null
+          copilot_hans_homologation: string | null
+          copilot_helmet_brand: string | null
+          copilot_helmet_expiry_date: string | null
+          copilot_helmet_homologation: string | null
+          copilot_helmet_model: string | null
+          copilot_shoes_brand: string | null
+          copilot_shoes_expiry_date: string | null
+          copilot_shoes_homologation: string | null
+          copilot_suit_brand: string | null
+          copilot_suit_expiry_date: string | null
+          copilot_suit_homologation: string | null
+          copilot_underwear_brand: string | null
+          copilot_underwear_expiry_date: string | null
+          copilot_underwear_homologation: string | null
           created_at: string
           driver_id: string
           gloves_brand: string | null
@@ -48,6 +67,25 @@ export type Database = {
           co_pilot_last_name?: string | null
           co_pilot_license_number?: string | null
           co_pilot_phone?: string | null
+          copilot_gloves_brand?: string | null
+          copilot_gloves_expiry_date?: string | null
+          copilot_gloves_homologation?: string | null
+          copilot_hans_brand?: string | null
+          copilot_hans_expiry_date?: string | null
+          copilot_hans_homologation?: string | null
+          copilot_helmet_brand?: string | null
+          copilot_helmet_expiry_date?: string | null
+          copilot_helmet_homologation?: string | null
+          copilot_helmet_model?: string | null
+          copilot_shoes_brand?: string | null
+          copilot_shoes_expiry_date?: string | null
+          copilot_shoes_homologation?: string | null
+          copilot_suit_brand?: string | null
+          copilot_suit_expiry_date?: string | null
+          copilot_suit_homologation?: string | null
+          copilot_underwear_brand?: string | null
+          copilot_underwear_expiry_date?: string | null
+          copilot_underwear_homologation?: string | null
           created_at?: string
           driver_id: string
           gloves_brand?: string | null
@@ -79,6 +117,25 @@ export type Database = {
           co_pilot_last_name?: string | null
           co_pilot_license_number?: string | null
           co_pilot_phone?: string | null
+          copilot_gloves_brand?: string | null
+          copilot_gloves_expiry_date?: string | null
+          copilot_gloves_homologation?: string | null
+          copilot_hans_brand?: string | null
+          copilot_hans_expiry_date?: string | null
+          copilot_hans_homologation?: string | null
+          copilot_helmet_brand?: string | null
+          copilot_helmet_expiry_date?: string | null
+          copilot_helmet_homologation?: string | null
+          copilot_helmet_model?: string | null
+          copilot_shoes_brand?: string | null
+          copilot_shoes_expiry_date?: string | null
+          copilot_shoes_homologation?: string | null
+          copilot_suit_brand?: string | null
+          copilot_suit_expiry_date?: string | null
+          copilot_suit_homologation?: string | null
+          copilot_underwear_brand?: string | null
+          copilot_underwear_expiry_date?: string | null
+          copilot_underwear_homologation?: string | null
           created_at?: string
           driver_id?: string
           gloves_brand?: string | null

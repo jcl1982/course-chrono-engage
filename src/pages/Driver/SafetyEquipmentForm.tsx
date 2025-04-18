@@ -11,6 +11,12 @@ import UnderwearSection from "@/components/driver/safety-equipment/UnderwearSect
 import ShoesSection from "@/components/driver/safety-equipment/ShoesSection";
 import GlovesSection from "@/components/driver/safety-equipment/GlovesSection";
 import HansSection from "@/components/driver/safety-equipment/HansSection";
+import CopilotHelmetSection from "@/components/driver/safety-equipment/CopilotHelmetSection";
+import CopilotSuitSection from "@/components/driver/safety-equipment/CopilotSuitSection";
+import CopilotUnderwearSection from "@/components/driver/safety-equipment/CopilotUnderwearSection";
+import CopilotShoesSection from "@/components/driver/safety-equipment/CopilotShoesSection";
+import CopilotGlovesSection from "@/components/driver/safety-equipment/CopilotGlovesSection";
+import CopilotHansSection from "@/components/driver/safety-equipment/CopilotHansSection";
 import FormActions from "@/components/driver/safety-equipment/FormActions";
 import { equipmentSchema, type EquipmentFormData } from "@/components/driver/safety-equipment/schemas/equipmentSchema";
 
@@ -21,6 +27,7 @@ const SafetyEquipmentForm = () => {
   const form = useForm<EquipmentFormData>({
     resolver: zodResolver(equipmentSchema),
     defaultValues: {
+      // Driver Equipment
       helmet_brand: "",
       helmet_model: "",
       helmet_homologation: "",
@@ -40,6 +47,27 @@ const SafetyEquipmentForm = () => {
       hans_brand: "",
       hans_homologation: "",
       hans_expiry_date: "",
+      
+      // Copilot Equipment (optional)
+      copilot_helmet_brand: "",
+      copilot_helmet_model: "",
+      copilot_helmet_homologation: "",
+      copilot_helmet_expiry_date: "",
+      copilot_suit_brand: "",
+      copilot_suit_homologation: "",
+      copilot_suit_expiry_date: "",
+      copilot_underwear_brand: "",
+      copilot_underwear_homologation: "",
+      copilot_underwear_expiry_date: "",
+      copilot_shoes_brand: "",
+      copilot_shoes_homologation: "",
+      copilot_shoes_expiry_date: "",
+      copilot_gloves_brand: "",
+      copilot_gloves_homologation: "",
+      copilot_gloves_expiry_date: "",
+      copilot_hans_brand: "",
+      copilot_hans_homologation: "",
+      copilot_hans_expiry_date: "",
     },
   });
 
@@ -53,6 +81,8 @@ const SafetyEquipmentForm = () => {
       // Make sure all form data is correctly typed for insert
       const equipmentData = {
         driver_id: userData.user.id,
+        
+        // Driver Equipment
         helmet_brand: data.helmet_brand,
         helmet_model: data.helmet_model,
         helmet_homologation: data.helmet_homologation,
@@ -71,7 +101,28 @@ const SafetyEquipmentForm = () => {
         gloves_expiry_date: data.gloves_expiry_date,
         hans_brand: data.hans_brand,
         hans_homologation: data.hans_homologation,
-        hans_expiry_date: data.hans_expiry_date
+        hans_expiry_date: data.hans_expiry_date,
+        
+        // Copilot Equipment
+        copilot_helmet_brand: data.copilot_helmet_brand,
+        copilot_helmet_model: data.copilot_helmet_model,
+        copilot_helmet_homologation: data.copilot_helmet_homologation,
+        copilot_helmet_expiry_date: data.copilot_helmet_expiry_date,
+        copilot_suit_brand: data.copilot_suit_brand,
+        copilot_suit_homologation: data.copilot_suit_homologation,
+        copilot_suit_expiry_date: data.copilot_suit_expiry_date,
+        copilot_underwear_brand: data.copilot_underwear_brand,
+        copilot_underwear_homologation: data.copilot_underwear_homologation,
+        copilot_underwear_expiry_date: data.copilot_underwear_expiry_date,
+        copilot_shoes_brand: data.copilot_shoes_brand,
+        copilot_shoes_homologation: data.copilot_shoes_homologation,
+        copilot_shoes_expiry_date: data.copilot_shoes_expiry_date,
+        copilot_gloves_brand: data.copilot_gloves_brand,
+        copilot_gloves_homologation: data.copilot_gloves_homologation,
+        copilot_gloves_expiry_date: data.copilot_gloves_expiry_date,
+        copilot_hans_brand: data.copilot_hans_brand,
+        copilot_hans_homologation: data.copilot_hans_homologation,
+        copilot_hans_expiry_date: data.copilot_hans_expiry_date,
       };
       
       const { error } = await supabase
@@ -101,14 +152,22 @@ const SafetyEquipmentForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-6">
+            <h2 className="text-xl font-bold mb-4">Équipement Pilote</h2>
             <HelmetSection />
+            <SuitSection />
             <UnderwearSection />
+            <ShoesSection />
             <GlovesSection />
+            <HansSection />
           </div>
           <div className="space-y-6">
-            <SuitSection />
-            <ShoesSection />
-            <HansSection />
+            <h2 className="text-xl font-bold mb-4">Équipement Copilote</h2>
+            <CopilotHelmetSection />
+            <CopilotSuitSection />
+            <CopilotUnderwearSection />
+            <CopilotShoesSection />
+            <CopilotGlovesSection />
+            <CopilotHansSection />
           </div>
         </div>
         <FormActions />

@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -5,10 +6,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { equipmentSchema } from "@/components/driver/safety-equipment/schemas/equipmentSchema";
-import type { EquipmentFormData, EquipmentType } from "@/types/equipment";
+import type { EquipmentFormData } from "@/types/equipment";
 import { fetchEquipmentById, saveEquipment, ApiError } from "@/api/equipment";
 
-export const useSafetyEquipmentForm = (type: EquipmentType) => {
+export const useSafetyEquipmentForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -18,7 +19,6 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
   const form = useForm<EquipmentFormData>({
     resolver: zodResolver(equipmentSchema),
     defaultValues: {
-      // Driver Equipment
       helmet_brand: "",
       helmet_model: "",
       helmet_homologation: "",
@@ -38,27 +38,6 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
       hans_brand: "",
       hans_homologation: "",
       hans_expiry_date: "",
-      
-      // Copilot Equipment
-      copilot_helmet_brand: "",
-      copilot_helmet_model: "",
-      copilot_helmet_homologation: "",
-      copilot_helmet_expiry_date: "",
-      copilot_suit_brand: "",
-      copilot_suit_homologation: "",
-      copilot_suit_expiry_date: "",
-      copilot_underwear_brand: "",
-      copilot_underwear_homologation: "",
-      copilot_underwear_expiry_date: "",
-      copilot_shoes_brand: "",
-      copilot_shoes_homologation: "",
-      copilot_shoes_expiry_date: "",
-      copilot_gloves_brand: "",
-      copilot_gloves_homologation: "",
-      copilot_gloves_expiry_date: "",
-      copilot_hans_brand: "",
-      copilot_hans_homologation: "",
-      copilot_hans_expiry_date: "",
     },
   });
 
@@ -110,18 +89,11 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
         driver_id: userData.user.id,
       };
 
-      if (type === "copilot") {
-        console.log("Submitting copilot equipment data:", equipmentData);
-      }
-
       const result = await saveEquipment(equipmentData, id);
-      console.log("Save result:", result);
 
       toast({
         title: "Succès",
-        description: type === "driver" 
-          ? "Équipement du pilote enregistré avec succès" 
-          : "Équipement du copilote enregistré avec succès",
+        description: "Équipement enregistré avec succès",
       });
 
       navigate('/driver');

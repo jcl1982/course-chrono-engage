@@ -30,26 +30,4 @@ export interface DriverEquipment {
   hans_expiry_date: string;
 }
 
-export interface CopilotEquipment {
-  copilot_helmet_brand: string;
-  copilot_helmet_model: string;
-  copilot_helmet_homologation: string;
-  copilot_helmet_expiry_date: string;
-  copilot_suit_brand: string;
-  copilot_suit_homologation: string;
-  copilot_suit_expiry_date: string;
-  copilot_underwear_brand: string;
-  copilot_underwear_homologation: string;
-  copilot_underwear_expiry_date: string;
-  copilot_shoes_brand: string;
-  copilot_shoes_homologation: string;
-  copilot_shoes_expiry_date: string;
-  copilot_gloves_brand: string;
-  copilot_gloves_homologation: string;
-  copilot_gloves_expiry_date: string;
-  copilot_hans_brand: string;
-  copilot_hans_homologation: string;
-  copilot_hans_expiry_date: string;
-}
-
-export type EquipmentFormData = DriverEquipment & CopilotEquipment;
+export type EquipmentFormData = DriverEquipment;

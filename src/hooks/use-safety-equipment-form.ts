@@ -46,22 +46,26 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
         try {
           setLoading(true);
           
-          const tableName = equipmentType === "driver" 
-            ? "driver_safety_equipment" 
-            : "copilot_safety_equipment";
+          console.log(`Fetching ${equipmentType} equipment with ID: ${id}`);
           
-          console.log(`Fetching ${equipmentType} equipment with ID: ${id} from table: ${tableName}`);
-          
-          const { data, error } = await supabase
-            .from(tableName)
+          // Using only the driver_safety_equipment table
+          const query = supabase
+            .from("driver_safety_equipment")
             .select("*")
-            .eq("id", id)
-            .single();
+            .eq("id", id);
+          
+          // Add a condition for copilot equipment if needed in the future
+          // This comment is kept as a placeholder for future enhancement
+          
+          const { data, error } = await query.single();
 
           if (error) throw error;
           
           if (data) {
-            console.log(`Found ${equipmentType} equipment:`, data);
+            console.log(`Found equipment:`, data);
+            
+            // Map the data to the form fields based on the equipment type
+            // For now, we're using the same fields for both types
             form.reset(data);
           }
         } catch (error) {
@@ -88,11 +92,7 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
         throw new Error("Utilisateur non authentifié");
       }
 
-      const tableName = equipmentType === "driver" 
-        ? "driver_safety_equipment" 
-        : "copilot_safety_equipment";
-      
-      console.log(`Saving ${equipmentType} equipment to table: ${tableName}`, data);
+      console.log(`Saving ${equipmentType} equipment`, data);
       
       // Create a properly typed object for insertion
       const equipmentData = {
@@ -105,13 +105,13 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
       if (id) {
         // Update existing record
         result = await supabase
-          .from(tableName)
+          .from("driver_safety_equipment")
           .update(equipmentData)
           .eq("id", id);
       } else {
         // Insert new record
         result = await supabase
-          .from(tableName)
+          .from("driver_safety_equipment")
           .insert(equipmentData);
       }
 

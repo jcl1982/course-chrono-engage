@@ -17,6 +17,7 @@ interface FormInputProps {
   description?: string;
   placeholder?: string;
   type?: string;
+  className?: string;
 }
 
 export const FormInput = ({
@@ -25,6 +26,7 @@ export const FormInput = ({
   description,
   placeholder,
   type = "text",
+  className,
 }: FormInputProps) => {
   const form = useFormContext();
 
@@ -37,7 +39,7 @@ export const FormInput = ({
           <FormLabel>{label}</FormLabel>
           {description && <FormDescription>{description}</FormDescription>}
           <FormControl>
-            <Input type={type} placeholder={placeholder} {...field} />
+            <Input type={type} placeholder={placeholder} className={className} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

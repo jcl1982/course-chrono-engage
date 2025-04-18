@@ -28,6 +28,7 @@ interface FormSelectProps {
   description?: string;
   placeholder?: string;
   options: Option[];
+  className?: string;
 }
 
 export const FormSelect = ({
@@ -36,6 +37,7 @@ export const FormSelect = ({
   description,
   placeholder,
   options,
+  className,
 }: FormSelectProps) => {
   const form = useFormContext();
 
@@ -49,7 +51,7 @@ export const FormSelect = ({
           {description && <FormDescription>{description}</FormDescription>}
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger className={className}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

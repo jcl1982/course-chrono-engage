@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -126,6 +127,7 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
               </div>
               <EquipmentActions
                 equipmentId={item.id}
+                type="driver"
                 onDeleteClick={() => setEquipmentToDelete(item.id)}
               />
             </div>

@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +14,46 @@ const Index = () => {
 
       <main className="container mx-auto py-8 px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors">
+            <CardHeader>
+              <CardTitle className="text-red-500">Espace Organisateur</CardTitle>
+              <CardDescription className="text-gray-400">
+                Gérez vos rallyes et épreuves
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-300">
+                Accédez à votre espace dédié pour gérer les rallyes, suivre les inscriptions, 
+                et organiser les épreuves.
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Link to="/organizer">
+                <Button variant="destructive" className="bg-red-700 hover:bg-red-800">Accéder</Button>
+              </Link>
+            </CardFooter>
+          </Card>
+
+          <Card className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors">
+            <CardHeader>
+              <CardTitle className="text-red-500">Espace Pilote</CardTitle>
+              <CardDescription className="text-gray-400">
+                Gérez vos participations
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-300">
+                Accédez à votre espace personnel pour gérer vos inscriptions, 
+                consulter votre calendrier et vos résultats.
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Link to="/driver">
+                <Button variant="destructive" className="bg-red-700 hover:bg-red-800">Accéder</Button>
+              </Link>
+            </CardFooter>
+          </Card>
+
           <Card className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors">
             <CardHeader>
               <CardTitle className="text-red-500">Inscription</CardTitle>

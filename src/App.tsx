@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import RegistrationForm from "./pages/Registration/RegistrationForm";
+import OrganizerSpace from "./pages/Organizer/Index";
+import DriverSpace from "./pages/Driver/Index";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +20,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/registration" element={<RegistrationForm />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/organizer" element={<OrganizerSpace />} />
+          <Route path="/driver" element={<DriverSpace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

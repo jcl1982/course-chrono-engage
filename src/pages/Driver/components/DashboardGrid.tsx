@@ -6,6 +6,7 @@ import VehicleList from "./VehicleList";
 import RegistrationList from "./RegistrationList";
 import RallyList from "./RallyList";
 import RallyResults from "./RallyResults";
+import SafetyEquipmentList from "@/components/driver/SafetyEquipmentList";
 
 interface DashboardGridProps {
   userId?: string;
@@ -28,6 +29,13 @@ const DashboardGrid: FC<DashboardGridProps> = ({ userId }) => {
         description="Vos inscriptions aux rallyes"
       >
         <RegistrationList userId={userId} />
+      </DashboardCard>
+
+      <DashboardCard
+        title="Mes Équipements"
+        description="Vos équipements de sécurité homologués"
+      >
+        <SafetyEquipmentList userId={userId} />
       </DashboardCard>
 
       <DashboardCard

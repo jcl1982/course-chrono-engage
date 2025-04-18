@@ -13,6 +13,7 @@ import RallyManager from "./pages/Organizer/RallyManager";
 import ParticipantManager from "./pages/Organizer/ParticipantManager";
 import Statistics from "./pages/Organizer/Statistics";
 import Auth from "./pages/Auth";
+import SafetyEquipmentForm from "./pages/Driver/SafetyEquipmentForm";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/organizer" element={<OrganizerSpace />} />
           <Route path="/driver" element={<DriverSpace />} />
           <Route path="/driver/vehicle/new" element={<VehicleNew />} />
+          <Route path="/driver/equipment/new" element={<SafetyEquipmentForm />} />
           <Route path="/organizer/rallies" element={<RallyManager />} />
           <Route path="/organizer/participants" element={<ParticipantManager />} />
           <Route path="/organizer/statistics" element={<Statistics />} />

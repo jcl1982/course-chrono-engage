@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      driver_safety_equipment: {
+        Row: {
+          created_at: string
+          driver_id: string
+          helmet_brand: string
+          helmet_expiry_date: string
+          helmet_homologation: string
+          helmet_model: string
+          id: string
+          suit_brand: string
+          suit_expiry_date: string
+          suit_homologation: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          driver_id: string
+          helmet_brand: string
+          helmet_expiry_date: string
+          helmet_homologation: string
+          helmet_model: string
+          id?: string
+          suit_brand: string
+          suit_expiry_date: string
+          suit_homologation: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          driver_id?: string
+          helmet_brand?: string
+          helmet_expiry_date?: string
+          helmet_homologation?: string
+          helmet_model?: string
+          id?: string
+          suit_brand?: string
+          suit_expiry_date?: string
+          suit_homologation?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       organizer_spaces: {
         Row: {
           created_at: string | null

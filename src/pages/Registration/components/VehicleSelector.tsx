@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -53,7 +52,6 @@ const VehicleSelector = ({ userId, onSelectVehicle, selectedVehicle }: VehicleSe
 
       setVehicles(data || []);
       
-      // Auto-select the first vehicle if one exists and none is selected
       if (data && data.length > 0 && !selectedVehicle) {
         onSelectVehicle(data[0].id);
       }
@@ -69,14 +67,14 @@ const VehicleSelector = ({ userId, onSelectVehicle, selectedVehicle }: VehicleSe
   };
 
   if (loading) {
-    return <div className="text-center py-4">Chargement de vos véhicules...</div>;
+    return <div className="text-center py-4 text-gray-400">Chargement de vos véhicules...</div>;
   }
 
   if (vehicles.length === 0) {
     return (
       <div className="text-center space-y-4 py-6">
         <p className="text-gray-400">Vous n'avez pas encore enregistré de véhicule.</p>
-        <Button onClick={handleAddNewVehicle}>
+        <Button onClick={handleAddNewVehicle} variant="outline">
           Ajouter un véhicule
         </Button>
       </div>
@@ -104,26 +102,26 @@ const VehicleSelector = ({ userId, onSelectVehicle, selectedVehicle }: VehicleSe
               <div className="flex-1">
                 <Label 
                   htmlFor={`vehicle-${vehicle.id}`} 
-                  className="text-lg font-medium flex justify-between text-black"
+                  className="text-lg font-medium flex justify-between text-white"
                 >
                   <span>{vehicle.make} {vehicle.model} ({vehicle.year})</span>
                 </Label>
-                <div className="grid grid-cols-2 gap-2 mt-2 text-sm text-black">
+                <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
                   <div>
-                    <span className="text-gray-600">Passeport technique:</span>
-                    <span className="ml-2">{vehicle.technical_passport_number}</span>
+                    <span className="text-gray-400">Passeport technique:</span>
+                    <span className="ml-2 text-gray-200">{vehicle.technical_passport_number}</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Cylindrée:</span>
-                    <span className="ml-2">{vehicle.engine_capacity} cm³</span>
+                    <span className="text-gray-400">Cylindrée:</span>
+                    <span className="ml-2 text-gray-200">{vehicle.engine_capacity} cm³</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Groupe:</span>
-                    <span className="ml-2">{vehicle.group_class}</span>
+                    <span className="text-gray-400">Groupe:</span>
+                    <span className="ml-2 text-gray-200">{vehicle.group_class}</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Classe:</span>
-                    <span className="ml-2">{vehicle.class}</span>
+                    <span className="text-gray-400">Classe:</span>
+                    <span className="ml-2 text-gray-200">{vehicle.class}</span>
                   </div>
                 </div>
               </div>

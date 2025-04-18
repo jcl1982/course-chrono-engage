@@ -39,12 +39,6 @@ const SafetyEquipmentForm = () => {
         suit_brand: data.suit_brand,
         suit_homologation: data.suit_homologation,
         suit_expiry_date: data.suit_expiry_date,
-        co_pilot_first_name: data.co_pilot_first_name || null,
-        co_pilot_last_name: data.co_pilot_last_name || null,
-        co_pilot_email: data.co_pilot_email || null,
-        co_pilot_phone: data.co_pilot_phone || null,
-        co_pilot_license_number: data.co_pilot_license_number || null,
-        co_pilot_blood_type: data.co_pilot_blood_type || null,
         driver_id: user.data.user?.id,
       };
       
@@ -74,7 +68,6 @@ const SafetyEquipmentForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <HelmetSection />
         <SuitSection />
-        <CoPilotSection />
         <FormActions />
       </form>
     </Form>

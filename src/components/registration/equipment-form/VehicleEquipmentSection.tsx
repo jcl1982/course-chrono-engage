@@ -1,8 +1,8 @@
 
-import { FormInput } from "@/components/form/FormInput";
-import { FormField, FormItem } from "@/components/ui/form";
-import { FormControl } from "@/components/ui/form";
+import { FormField, FormItem, FormControl } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
+import SeatsSection from "./SeatsSection";
+import HarnessSection from "./HarnessSection";
 
 const VehicleEquipmentSection = () => {
   return (
@@ -26,31 +26,8 @@ const VehicleEquipmentSection = () => {
         )}
       />
 
-      <div className="space-y-4">
-        <FormInput
-          name="sieges.brand"
-          label="Marque des sièges"
-          placeholder="Entrez la marque des sièges"
-        />
-        <FormInput
-          name="sieges.homologation"
-          label="Numéro d'homologation"
-          placeholder="Entrez le numéro d'homologation"
-        />
-      </div>
-
-      <div className="space-y-4">
-        <FormInput
-          name="harnais.brand"
-          label="Marque du harnais"
-          placeholder="Entrez la marque du harnais"
-        />
-        <FormInput
-          name="harnais.homologation"
-          label="Numéro d'homologation"
-          placeholder="Entrez le numéro d'homologation"
-        />
-      </div>
+      <SeatsSection />
+      <HarnessSection />
     </div>
   );
 };

@@ -688,6 +688,10 @@ export type Database = {
         Args: { user_id: string }
         Returns: string
       }
+      is_organizer: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
       update_timing_point: {
         Args: {
           p_id: string

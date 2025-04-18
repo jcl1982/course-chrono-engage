@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import VehicleSelector from "./components/VehicleSelector";
 import PersonalInfoForm from "@/components/registration/PersonalInfoForm";
 import EquipmentForm from "@/components/registration/EquipmentForm";
+import { SavedEquipmentSelector } from "@/components/driver/safety-equipment/SavedEquipmentSelector";
 
 export type EventType = "rally" | "hillclimb" | "slalom";
 
@@ -20,6 +20,8 @@ const RegistrationForm = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const { rallyId } = useParams();
   const { toast } = useToast();
+  const [selectedEquipment, setSelectedEquipment] = useState<string | null>(null);
+  const [showNewEquipmentForm, setShowNewEquipmentForm] = useState(false);
 
   useEffect(() => {
     const fetchUserAndRally = async () => {
@@ -112,6 +114,13 @@ const RegistrationForm = () => {
     }
   };
 
+  const handleEquipmentSelect = (equipment: any) => {
+    if (equipment) {
+      // When equipment is selected, store its ID for registration
+      setSelectedEquipment(equipment.id);
+    }
+  };
+
   return (
     <div className="container mx-auto p-6">
       <Card className="w-full max-w-4xl mx-auto">
@@ -151,7 +160,14 @@ const RegistrationForm = () => {
             <TabsContent value="equipment">
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold mb-4">Équipements de Sécurité</h3>
-                <EquipmentForm />
+                {!showNewEquipmentForm ? (
+                  <SavedEquipmentSelector
+                    onSelectEquipment={handleEquipmentSelect}
+                    onNewEquipment={() => setShowNewEquipmentForm(true)}
+                  />
+                ) : (
+                  <EquipmentForm />
+                )}
               </div>
             </TabsContent>
           </Tabs>

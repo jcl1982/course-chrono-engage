@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -92,18 +91,20 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
     return (
       <div className="text-center space-y-4 py-6">
         <p className="text-gray-400">Vous n'avez pas encore enregistré d'équipement.</p>
-        <div className="space-x-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-2">
           <Button 
             onClick={() => handleAddNew("driver")} 
-            className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a]"
+            className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a] w-full sm:w-auto"
+            size="sm"
           >
-            Ajouter un équipement pilote
+            Équipement pilote
           </Button>
           <Button 
             onClick={() => handleAddNew("copilot")} 
-            className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a]"
+            className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a] w-full sm:w-auto"
+            size="sm"
           >
-            Ajouter un équipement copilote
+            Équipement copilote
           </Button>
         </div>
       </div>
@@ -141,18 +142,20 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
         </Card>
       ))}
       
-      <div className="flex justify-center space-x-4">
+      <div className="flex flex-col sm:flex-row justify-center gap-2">
         <Button 
           onClick={() => handleAddNew("driver")} 
-          className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a]"
+          className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a] w-full sm:w-auto"
+          size="sm"
         >
-          Ajouter un équipement pilote
+          Équipement pilote
         </Button>
         <Button 
           onClick={() => handleAddNew("copilot")} 
-          className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a]"
+          className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a] w-full sm:w-auto"
+          size="sm"
         >
-          Ajouter un équipement copilote
+          Équipement copilote
         </Button>
       </div>
 

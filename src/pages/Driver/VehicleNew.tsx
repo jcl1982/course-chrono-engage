@@ -1,5 +1,4 @@
-
-import { VehicleForm } from "@/components/registration/VehicleForm";
+import VehicleForm from "@/components/registration/VehicleForm";
 
 const VehicleNew = () => {
   return (

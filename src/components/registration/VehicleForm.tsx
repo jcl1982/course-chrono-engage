@@ -1,44 +1,13 @@
 
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { z } from "zod";
+import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-
-// Update schema to match all required database fields
-const vehicleSchema = z.object({
-  brand: z.string().min(2, "La marque doit contenir au moins 2 caractères"),
-  model: z.string().min(2, "Le modèle doit contenir au moins 2 caractères"),
-  group: z.string().min(1, "Veuillez sélectionner un groupe"),
-  class: z.string().min(1, "Veuillez sélectionner une classe"),
-  year: z.string().min(4, "Veuillez entrer l'année du véhicule"),
-  category: z.string().default("default"), // Default value to satisfy schema
-  technicalPassport: z.string().min(2, "Numéro de passeport technique requis"),
-  homologationNumber: z.string().default("N/A"),
-  engineCapacity: z.string().min(1, "Cylindrée requise"),
-  engineNumber: z.string().default("N/A"),
-  chassisNumber: z.string().default("N/A"),
-  registrationNumber: z.string().default("N/A"),
-});
-
-type VehicleFormData = z.infer<typeof vehicleSchema>;
+import { BasicVehicleInfo } from "./vehicle-form/BasicVehicleInfo";
+import { TechnicalDetails } from "./vehicle-form/TechnicalDetails";
+import { vehicleSchema, type VehicleFormData } from "./vehicle-form/schema";
 
 const VehicleForm = () => {
   const form = useForm<VehicleFormData>({
@@ -108,115 +77,9 @@ const VehicleForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          control={form.control}
-          name="brand"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Marque</FormLabel>
-              <FormControl>
-                <Input placeholder="Marque du véhicule" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="model"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Modèle</FormLabel>
-              <FormControl>
-                <Input placeholder="Modèle du véhicule" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="year"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Année</FormLabel>
-              <FormControl>
-                <Input placeholder="Année du véhicule" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="group"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Groupe</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner le groupe" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="A">Groupe A</SelectItem>
-                  <SelectItem value="N">Groupe N</SelectItem>
-                  <SelectItem value="R">Groupe R</SelectItem>
-                  <SelectItem value="F2000">F2000</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="class"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Classe</FormLabel>
-              <FormControl>
-                <Input placeholder="Classe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="technicalPassport"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Passeport Technique</FormLabel>
-              <FormControl>
-                <Input placeholder="Numéro de passeport technique" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="engineCapacity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cylindrée</FormLabel>
-              <FormControl>
-                <Input placeholder="Cylindrée (cm³)" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <BasicVehicleInfo />
+        <TechnicalDetails />
         <div className="md:col-span-2">
           <Button type="submit" className="w-full">Enregistrer le véhicule</Button>
         </div>

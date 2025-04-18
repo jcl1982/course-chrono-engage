@@ -2,6 +2,7 @@
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
+import { UserRound } from "lucide-react";
 import type { PersonalInfoFormData } from "../schemas/personalInfoSchema";
 
 export const DriverInfo = () => {
@@ -9,7 +10,11 @@ export const DriverInfo = () => {
 
   return (
     <div className="space-y-4">
-      <h4 className="font-medium">Informations Pilote</h4>
+      <div className="flex items-center gap-2">
+        <UserRound className="h-5 w-5" />
+        <h4 className="font-medium">Informations Pilote</h4>
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           control={form.control}

@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { formatDistance } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar, MapPin, Users, Pencil, Trash2 } from "lucide-react";
@@ -65,6 +66,30 @@ export const RallyTable = () => {
     }
   };
 
+  const handleRegistrationToggle = async (rally: Rally) => {
+    try {
+      const { error } = await supabase
+        .from("rallies")
+        .update({ registration_open: !rally.registration_open })
+        .eq("id", rally.id);
+
+      if (error) throw error;
+
+      await queryClient.invalidateQueries({ queryKey: ["rallies"] });
+      toast({ 
+        title: "Statut des inscriptions mis à jour",
+        description: `Les inscriptions sont maintenant ${!rally.registration_open ? 'ouvertes' : 'fermées'} pour ${rally.name}` 
+      });
+    } catch (error) {
+      console.error("Error updating rally registration status:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la mise à jour du statut des inscriptions",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return <p className="text-gray-400">Chargement des rallyes...</p>;
   }
@@ -102,17 +127,22 @@ export const RallyTable = () => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
                     <Users className="h-4 w-4 text-red-500" />
-                    <span 
-                      className={`rounded-full px-2 py-1 text-xs ${
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={rally.registration_open}
+                        onCheckedChange={() => handleRegistrationToggle(rally)}
+                        className="data-[state=checked]:bg-red-500"
+                      />
+                      <span className={`text-sm ${
                         rally.registration_open 
-                          ? "bg-green-500/20 text-green-500" 
-                          : "bg-red-500/20 text-red-500"
-                      }`}
-                    >
-                      {rally.registration_open ? "Inscriptions ouvertes" : "Inscriptions fermées"}
-                    </span>
+                          ? "text-green-500" 
+                          : "text-red-500"
+                      }`}>
+                        {rally.registration_open ? "Inscriptions ouvertes" : "Inscriptions fermées"}
+                      </span>
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell>

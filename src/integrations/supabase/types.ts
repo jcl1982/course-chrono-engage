@@ -19,14 +19,26 @@ export type Database = {
           co_pilot_phone: string | null
           created_at: string
           driver_id: string
-          helmet_brand: string
-          helmet_expiry_date: string
-          helmet_homologation: string
-          helmet_model: string
+          gloves_brand: string | null
+          gloves_expiry_date: string | null
+          gloves_homologation: string | null
+          hans_brand: string | null
+          hans_expiry_date: string | null
+          hans_homologation: string | null
+          helmet_brand: string | null
+          helmet_expiry_date: string | null
+          helmet_homologation: string | null
+          helmet_model: string | null
           id: string
-          suit_brand: string
-          suit_expiry_date: string
-          suit_homologation: string
+          shoes_brand: string | null
+          shoes_expiry_date: string | null
+          shoes_homologation: string | null
+          suit_brand: string | null
+          suit_expiry_date: string | null
+          suit_homologation: string | null
+          underwear_brand: string | null
+          underwear_expiry_date: string | null
+          underwear_homologation: string | null
           updated_at: string
         }
         Insert: {
@@ -38,14 +50,26 @@ export type Database = {
           co_pilot_phone?: string | null
           created_at?: string
           driver_id: string
-          helmet_brand: string
-          helmet_expiry_date: string
-          helmet_homologation: string
-          helmet_model: string
+          gloves_brand?: string | null
+          gloves_expiry_date?: string | null
+          gloves_homologation?: string | null
+          hans_brand?: string | null
+          hans_expiry_date?: string | null
+          hans_homologation?: string | null
+          helmet_brand?: string | null
+          helmet_expiry_date?: string | null
+          helmet_homologation?: string | null
+          helmet_model?: string | null
           id?: string
-          suit_brand: string
-          suit_expiry_date: string
-          suit_homologation: string
+          shoes_brand?: string | null
+          shoes_expiry_date?: string | null
+          shoes_homologation?: string | null
+          suit_brand?: string | null
+          suit_expiry_date?: string | null
+          suit_homologation?: string | null
+          underwear_brand?: string | null
+          underwear_expiry_date?: string | null
+          underwear_homologation?: string | null
           updated_at?: string
         }
         Update: {
@@ -57,14 +81,26 @@ export type Database = {
           co_pilot_phone?: string | null
           created_at?: string
           driver_id?: string
-          helmet_brand?: string
-          helmet_expiry_date?: string
-          helmet_homologation?: string
-          helmet_model?: string
+          gloves_brand?: string | null
+          gloves_expiry_date?: string | null
+          gloves_homologation?: string | null
+          hans_brand?: string | null
+          hans_expiry_date?: string | null
+          hans_homologation?: string | null
+          helmet_brand?: string | null
+          helmet_expiry_date?: string | null
+          helmet_homologation?: string | null
+          helmet_model?: string | null
           id?: string
-          suit_brand?: string
-          suit_expiry_date?: string
-          suit_homologation?: string
+          shoes_brand?: string | null
+          shoes_expiry_date?: string | null
+          shoes_homologation?: string | null
+          suit_brand?: string | null
+          suit_expiry_date?: string | null
+          suit_homologation?: string | null
+          underwear_brand?: string | null
+          underwear_expiry_date?: string | null
+          underwear_homologation?: string | null
           updated_at?: string
         }
         Relationships: []

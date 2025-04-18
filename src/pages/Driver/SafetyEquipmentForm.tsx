@@ -45,11 +45,33 @@ const SafetyEquipmentForm = () => {
 
   const onSubmit = async (data: EquipmentFormData) => {
     try {
-      const user = await supabase.auth.getUser();
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        throw new Error("Utilisateur non connecté");
+      }
       
+      // Make sure all form data is correctly typed for insert
       const equipmentData = {
-        ...data,
-        driver_id: user.data.user?.id,
+        driver_id: userData.user.id,
+        helmet_brand: data.helmet_brand,
+        helmet_model: data.helmet_model,
+        helmet_homologation: data.helmet_homologation,
+        helmet_expiry_date: data.helmet_expiry_date,
+        suit_brand: data.suit_brand,
+        suit_homologation: data.suit_homologation,
+        suit_expiry_date: data.suit_expiry_date,
+        underwear_brand: data.underwear_brand,
+        underwear_homologation: data.underwear_homologation,
+        underwear_expiry_date: data.underwear_expiry_date,
+        shoes_brand: data.shoes_brand,
+        shoes_homologation: data.shoes_homologation,
+        shoes_expiry_date: data.shoes_expiry_date,
+        gloves_brand: data.gloves_brand,
+        gloves_homologation: data.gloves_homologation,
+        gloves_expiry_date: data.gloves_expiry_date,
+        hans_brand: data.hans_brand,
+        hans_homologation: data.hans_homologation,
+        hans_expiry_date: data.hans_expiry_date
       };
       
       const { error } = await supabase
@@ -65,6 +87,7 @@ const SafetyEquipmentForm = () => {
       
       navigate('/driver');
     } catch (error) {
+      console.error("Error saving equipment:", error);
       toast({
         title: "Erreur",
         description: "Impossible d'enregistrer l'équipement",

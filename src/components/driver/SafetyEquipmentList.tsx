@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -94,14 +95,14 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
         <div className="flex flex-col sm:flex-row justify-center gap-2">
           <Button 
             onClick={() => handleAddNew("driver")} 
-            className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a] w-full sm:w-auto"
+            className="bg-[#ea384c] text-white hover:bg-[#c32c3f] w-full sm:w-auto"
             size="sm"
           >
             Équipement pilote
           </Button>
           <Button 
             onClick={() => handleAddNew("copilot")} 
-            className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a] w-full sm:w-auto"
+            className="bg-[#ea384c] text-white hover:bg-[#c32c3f] w-full sm:w-auto"
             size="sm"
           >
             Équipement copilote
@@ -145,14 +146,14 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
       <div className="flex flex-col sm:flex-row justify-center gap-2">
         <Button 
           onClick={() => handleAddNew("driver")} 
-          className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a] w-full sm:w-auto"
+          className="bg-[#ea384c] text-white hover:bg-[#c32c3f] w-full sm:w-auto"
           size="sm"
         >
           Équipement pilote
         </Button>
         <Button 
           onClick={() => handleAddNew("copilot")} 
-          className="bg-[#221F26] text-red-500 hover:bg-[#2a2a2a] w-full sm:w-auto"
+          className="bg-[#ea384c] text-white hover:bg-[#c32c3f] w-full sm:w-auto"
           size="sm"
         >
           Équipement copilote

@@ -9,9 +9,21 @@ import HansSection from "@/components/driver/safety-equipment/HansSection";
 import FormActions from "@/components/driver/safety-equipment/FormActions";
 import LoadingState from "@/components/driver/safety-equipment/LoadingState";
 import { useSafetyEquipmentForm } from "@/hooks/use-safety-equipment-form";
+import { useLocation } from "react-router-dom";
+import { EquipmentType } from "@/types/equipment";
 
 const SafetyEquipmentForm = () => {
-  const { form, loading, submitting, onSubmit } = useSafetyEquipmentForm();
+  const location = useLocation();
+  // Determine equipment type based on the URL path
+  const getEquipmentType = (): EquipmentType => {
+    if (location.pathname.includes("/copilot")) {
+      return "copilot";
+    }
+    return "driver";
+  };
+  
+  const equipmentType = getEquipmentType();
+  const { form, loading, submitting, onSubmit } = useSafetyEquipmentForm(equipmentType);
 
   if (loading) {
     return <LoadingState />;
@@ -21,7 +33,9 @@ const SafetyEquipmentForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-6">
-          <h2 className="text-xl font-bold mb-4">Équipement Pilote</h2>
+          <h2 className="text-xl font-bold mb-4">
+            {equipmentType === "driver" ? "Équipement Pilote" : "Équipement Copilote"}
+          </h2>
           <HelmetSection />
           <SuitSection />
           <UnderwearSection />

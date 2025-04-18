@@ -1,22 +1,21 @@
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "./use-toast";
 import { equipmentSchema } from "@/components/driver/safety-equipment/schemas/equipmentSchema";
-import type { EquipmentFormData } from "@/types/equipment";
-import { fetchEquipmentById, saveEquipment, ApiError } from "@/api/equipment";
+import { EquipmentType } from "@/types/equipment";
 
-export const useSafetyEquipmentForm = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
+export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") => {
   const { id } = useParams();
-  const [loading, setLoading] = useState(id ? true : false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(!!id);
   const [submitting, setSubmitting] = useState(false);
 
-  const form = useForm<EquipmentFormData>({
+  const form = useForm({
     resolver: zodResolver(equipmentSchema),
     defaultValues: {
       helmet_brand: "",
@@ -38,87 +37,99 @@ export const useSafetyEquipmentForm = () => {
       hans_brand: "",
       hans_homologation: "",
       hans_expiry_date: "",
-    },
+    }
   });
 
-  const fetchEquipment = useCallback(async () => {
-    if (!id) return;
-    
-    try {
-      setLoading(true);
-      const data = await fetchEquipmentById(id);
-      if (data) {
-        form.reset(data);
-      }
-    } catch (error) {
-      if (error instanceof ApiError) {
-        toast({
-          title: "Erreur",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Erreur",
-          description: "Une erreur inattendue s'est produite",
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [id, form, toast]);
-
   useEffect(() => {
-    if (id) {
-      fetchEquipment();
-    }
-  }, [id, fetchEquipment]);
+    const fetchEquipment = async () => {
+      if (id) {
+        try {
+          setLoading(true);
+          
+          const tableName = equipmentType === "driver" 
+            ? "driver_safety_equipment" 
+            : "copilot_safety_equipment";
+          
+          console.log(`Fetching ${equipmentType} equipment with ID: ${id} from table: ${tableName}`);
+          
+          const { data, error } = await supabase
+            .from(tableName)
+            .select("*")
+            .eq("id", id)
+            .single();
 
-  const onSubmit = async (data: EquipmentFormData) => {
+          if (error) throw error;
+          
+          if (data) {
+            console.log(`Found ${equipmentType} equipment:`, data);
+            form.reset(data);
+          }
+        } catch (error) {
+          console.error("Error fetching equipment:", error);
+          toast({
+            title: "Erreur",
+            description: "Impossible de charger les données de l'équipement",
+            variant: "destructive",
+          });
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchEquipment();
+  }, [id, form, toast, equipmentType]);
+
+  const onSubmit = async (data: any) => {
     try {
       setSubmitting(true);
-      
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) {
-        throw new Error("Utilisateur non connecté");
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) {
+        throw new Error("Utilisateur non authentifié");
       }
+
+      const tableName = equipmentType === "driver" 
+        ? "driver_safety_equipment" 
+        : "copilot_safety_equipment";
       
+      console.log(`Saving ${equipmentType} equipment to table: ${tableName}`, data);
+      
+      // Create a properly typed object for insertion
       const equipmentData = {
         ...data,
-        driver_id: userData.user.id,
+        driver_id: user.data.user.id,
       };
+      
+      let result;
+      
+      if (id) {
+        // Update existing record
+        result = await supabase
+          .from(tableName)
+          .update(equipmentData)
+          .eq("id", id);
+      } else {
+        // Insert new record
+        result = await supabase
+          .from(tableName)
+          .insert(equipmentData);
+      }
 
-      const result = await saveEquipment(equipmentData, id);
+      if (result.error) throw result.error;
 
       toast({
         title: "Succès",
         description: "Équipement enregistré avec succès",
       });
-
+      
       navigate('/driver');
     } catch (error) {
-      console.error("Form submission error:", error);
-      
-      if (error instanceof ApiError) {
-        toast({
-          title: "Erreur",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else if (error instanceof Error) {
-        toast({
-          title: "Erreur",
-          description: error.message || "Une erreur inattendue s'est produite",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Erreur",
-          description: "Une erreur inattendue s'est produite",
-          variant: "destructive",
-        });
-      }
+      console.error("Error saving equipment:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'enregistrer l'équipement",
+        variant: "destructive",
+      });
     } finally {
       setSubmitting(false);
     }

@@ -67,6 +67,7 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
     if (!id) return;
     
     try {
+      setLoading(true);
       const data = await fetchEquipmentById(id);
       if (data) {
         console.log("Fetched equipment data:", data);
@@ -94,13 +95,13 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
   const onSubmit = async (data: EquipmentFormData) => {
     try {
       setSubmitting(true);
+      console.log(`Submitting ${type} equipment data:`, JSON.stringify(data, null, 2));
       
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
         throw new Error("Utilisateur non connecté");
       }
 
-      console.log("Submitting form data:", JSON.stringify(data, null, 2));
       console.log("User ID:", userData.user.id);
       
       const equipmentData = {
@@ -112,7 +113,9 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
       
       toast({
         title: "Succès",
-        description: result.message,
+        description: type === "driver" 
+          ? "Équipement du pilote enregistré avec succès" 
+          : "Équipement du copilote enregistré avec succès",
       });
       
       navigate('/driver');

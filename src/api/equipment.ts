@@ -51,6 +51,11 @@ export const saveEquipment = async (
       })
     ) as TablesInsert<"driver_safety_equipment">;
     
+    // Make sure driver_id is included in the cleanedData
+    if (!cleanedData.driver_id) {
+      cleanedData.driver_id = driver_id;
+    }
+    
     console.log("Cleaned data:", JSON.stringify(cleanedData, null, 2));
 
     if (id) {

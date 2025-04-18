@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
 import { equipmentSchema } from "@/components/driver/safety-equipment/schemas/equipmentSchema";
@@ -11,6 +11,9 @@ import { EquipmentType } from "@/types/equipment";
 export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const returnUrl = searchParams.get("returnUrl");
   const { toast } = useToast();
   const [loading, setLoading] = useState(!!id);
   const [submitting, setSubmitting] = useState(false);
@@ -128,7 +131,12 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
         description: "Équipement enregistré avec succès",
       });
       
-      navigate('/driver');
+      // Navigate back to the return URL if provided, otherwise go to the driver dashboard
+      if (returnUrl) {
+        navigate(returnUrl);
+      } else {
+        navigate('/driver');
+      }
     } catch (error) {
       console.error("Error saving equipment:", error);
       toast({

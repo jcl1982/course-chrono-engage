@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -53,6 +54,13 @@ export const SavedEquipmentSelector = ({
 
     fetchSavedEquipment();
   }, [toast]);
+
+  // Add this function back to handle radio selection
+  const handleSelection = (value: string) => {
+    setSelectedId(value);
+    const selected = savedEquipment.find((eq) => eq.id === value) || null;
+    onSelectEquipment(selected);
+  };
 
   const handleNewEquipment = () => {
     const path = equipmentType === "driver" ? "/driver/equipment/new" : "/driver/equipment/copilot/new";

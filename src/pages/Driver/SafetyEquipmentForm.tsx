@@ -1,3 +1,4 @@
+
 import { Form } from "@/components/ui/form";
 import HelmetSection from "@/components/driver/safety-equipment/HelmetSection";
 import SuitSection from "@/components/driver/safety-equipment/SuitSection";
@@ -10,12 +11,12 @@ import LoadingState from "@/components/driver/safety-equipment/LoadingState";
 import { useSafetyEquipmentForm } from "@/hooks/use-safety-equipment-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { EquipmentType } from "@/types/equipment";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { useParams } from "react-router-dom";
 
 const SafetyEquipmentForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { id } = useParams();
   const searchParams = new URLSearchParams(location.search);
   const returnUrl = searchParams.get("returnUrl");
 
@@ -33,57 +34,6 @@ const SafetyEquipmentForm = () => {
   if (loading) {
     return <LoadingState />;
   }
-
-  const onSubmit = async (data: any) => {
-    try {
-      setSubmitting(true);
-      const user = await supabase.auth.getUser();
-      if (!user.data.user) {
-        throw new Error("Utilisateur non authentifié");
-      }
-
-      const equipmentData = {
-        ...data,
-        driver_id: user.data.user.id,
-      };
-      
-      let result;
-      
-      if (id) {
-        result = await supabase
-          .from("driver_safety_equipment")
-          .update(equipmentData)
-          .eq("id", id);
-      } else {
-        result = await supabase
-          .from("driver_safety_equipment")
-          .insert(equipmentData);
-      }
-
-      if (result.error) throw result.error;
-
-      toast({
-        title: "Succès",
-        description: "Équipement enregistré avec succès",
-      });
-      
-      // Navigate back to the return URL if provided, otherwise go to the driver dashboard
-      if (returnUrl) {
-        navigate(returnUrl);
-      } else {
-        navigate('/driver');
-      }
-    } catch (error) {
-      console.error("Error saving equipment:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible d'enregistrer l'équipement",
-        variant: "destructive",
-      });
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   return (
     <Form {...form}>

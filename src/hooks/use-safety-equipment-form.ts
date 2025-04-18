@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router-dom";
@@ -92,6 +92,12 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
     }
   }, [id, form, toast]);
 
+  useEffect(() => {
+    if (id) {
+      fetchEquipment();
+    }
+  }, [id, fetchEquipment]);
+
   const onSubmit = async (data: EquipmentFormData) => {
     try {
       setSubmitting(true);
@@ -109,7 +115,27 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
         driver_id: userData.user.id,
       };
       
+      // Extra check for co-pilot equipment to ensure at least one field is filled
+      if (type === "copilot") {
+        console.log("Validating co-pilot data has at least one field filled");
+        const hasCopilotData = Object.entries(data).some(([key, value]) => 
+          key.startsWith('copilot_') && value && value.trim() !== ''
+        );
+        
+        if (!hasCopilotData) {
+          toast({
+            title: "Erreur",
+            description: "Veuillez remplir au moins un champ pour l'équipement du copilote",
+            variant: "destructive",
+          });
+          setSubmitting(false);
+          return;
+        }
+      }
+      
+      console.log("About to save equipment data:", equipmentData);
       const result = await saveEquipment(equipmentData, id);
+      console.log("Save result:", result);
       
       toast({
         title: "Succès",

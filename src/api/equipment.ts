@@ -73,6 +73,9 @@ export const saveEquipment = async (
       console.log("Update successful:", data);
       return { message: "Équipement mis à jour avec succès", data };
     } else {
+      // Log the Supabase request before it's made
+      console.log("Inserting into driver_safety_equipment with data:", cleanedData);
+      
       const { data, error } = await supabase
         .from('driver_safety_equipment')
         .insert(cleanedData)

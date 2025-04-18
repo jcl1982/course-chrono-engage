@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,9 +7,16 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="bg-[#222222] shadow-sm border-b border-red-800">
-        <div className="container mx-auto py-4 px-4 md:px-6">
-          <h1 className="text-3xl font-bold text-red-500">Chrono Engage</h1>
-          <p className="text-gray-300">Plateforme de gestion des rallyes</p>
+        <div className="container mx-auto py-4 px-4 md:px-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-red-500">Chrono Engage</h1>
+            <p className="text-gray-300">Plateforme de gestion des rallyes</p>
+          </div>
+          <Link to="/auth">
+            <Button variant="destructive" className="bg-red-700 hover:bg-red-800">
+              Connexion
+            </Button>
+          </Link>
         </div>
       </header>
 

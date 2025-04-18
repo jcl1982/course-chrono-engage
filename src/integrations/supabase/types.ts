@@ -11,6 +11,12 @@ export type Database = {
     Tables: {
       driver_safety_equipment: {
         Row: {
+          co_pilot_blood_type: string | null
+          co_pilot_email: string | null
+          co_pilot_first_name: string | null
+          co_pilot_last_name: string | null
+          co_pilot_license_number: string | null
+          co_pilot_phone: string | null
           created_at: string
           driver_id: string
           helmet_brand: string
@@ -24,6 +30,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          co_pilot_blood_type?: string | null
+          co_pilot_email?: string | null
+          co_pilot_first_name?: string | null
+          co_pilot_last_name?: string | null
+          co_pilot_license_number?: string | null
+          co_pilot_phone?: string | null
           created_at?: string
           driver_id: string
           helmet_brand: string
@@ -37,6 +49,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          co_pilot_blood_type?: string | null
+          co_pilot_email?: string | null
+          co_pilot_first_name?: string | null
+          co_pilot_last_name?: string | null
+          co_pilot_license_number?: string | null
+          co_pilot_phone?: string | null
           created_at?: string
           driver_id?: string
           helmet_brand?: string

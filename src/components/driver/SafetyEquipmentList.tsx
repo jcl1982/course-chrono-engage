@@ -94,13 +94,11 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
         <div className="space-x-4">
           <Button 
             onClick={() => handleAddNew("driver")} 
-            className="bg-black text-white hover:bg-gray-800"
           >
             Ajouter un équipement pilote
           </Button>
           <Button 
             onClick={() => handleAddNew("copilot")} 
-            className="bg-black text-white hover:bg-gray-800"
           >
             Ajouter un équipement copilote
           </Button>
@@ -143,13 +141,11 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
       <div className="flex justify-center space-x-4">
         <Button 
           onClick={() => handleAddNew("driver")} 
-          className="bg-black text-white hover:bg-gray-800"
         >
           Ajouter un équipement pilote
         </Button>
         <Button 
           onClick={() => handleAddNew("copilot")} 
-          className="bg-black text-white hover:bg-gray-800"
         >
           Ajouter un équipement copilote
         </Button>

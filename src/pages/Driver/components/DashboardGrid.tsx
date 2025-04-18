@@ -5,6 +5,7 @@ import DashboardCard from "./DashboardCard";
 import VehicleList from "./VehicleList";
 import RegistrationList from "./RegistrationList";
 import RallyList from "./RallyList";
+import RallyResults from "./RallyResults";
 
 interface DashboardGridProps {
   userId?: string;
@@ -46,9 +47,7 @@ const DashboardGrid: FC<DashboardGridProps> = ({ userId }) => {
         title="Mes Résultats"
         description="Vos résultats aux rallyes"
       >
-        <p className="text-gray-300">
-          Consultez vos résultats et performances aux différentes épreuves.
-        </p>
+        <RallyResults userId={userId} />
       </DashboardCard>
     </div>
   );

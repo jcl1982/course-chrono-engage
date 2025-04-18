@@ -104,25 +104,25 @@ const VehicleSelector = ({ userId, onSelectVehicle, selectedVehicle }: VehicleSe
               <div className="flex-1">
                 <Label 
                   htmlFor={`vehicle-${vehicle.id}`} 
-                  className="text-lg font-medium flex justify-between"
+                  className="text-lg font-medium flex justify-between text-black"
                 >
                   <span>{vehicle.make} {vehicle.model} ({vehicle.year})</span>
                 </Label>
-                <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
+                <div className="grid grid-cols-2 gap-2 mt-2 text-sm text-black">
                   <div>
-                    <span className="text-gray-400">Passeport technique:</span>
+                    <span className="text-gray-600">Passeport technique:</span>
                     <span className="ml-2">{vehicle.technical_passport_number}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400">Cylindrée:</span>
+                    <span className="text-gray-600">Cylindrée:</span>
                     <span className="ml-2">{vehicle.engine_capacity} cm³</span>
                   </div>
                   <div>
-                    <span className="text-gray-400">Groupe:</span>
+                    <span className="text-gray-600">Groupe:</span>
                     <span className="ml-2">{vehicle.group_class}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400">Classe:</span>
+                    <span className="text-gray-600">Classe:</span>
                     <span className="ml-2">{vehicle.class}</span>
                   </div>
                 </div>

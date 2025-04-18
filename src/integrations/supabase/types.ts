@@ -9,6 +9,129 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      copilot_registrations: {
+        Row: {
+          address: string
+          birth_date: string
+          city: string
+          country: string
+          created_at: string
+          emergency_contact_name: string
+          emergency_contact_phone: string
+          first_name: string
+          id: string
+          last_name: string
+          license_expiry: string
+          license_number: string
+          nationality: string
+          phone: string
+          postal_code: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          birth_date: string
+          city: string
+          country: string
+          created_at?: string
+          emergency_contact_name: string
+          emergency_contact_phone: string
+          first_name: string
+          id?: string
+          last_name: string
+          license_expiry: string
+          license_number: string
+          nationality: string
+          phone: string
+          postal_code: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          birth_date?: string
+          city?: string
+          country?: string
+          created_at?: string
+          emergency_contact_name?: string
+          emergency_contact_phone?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          license_expiry?: string
+          license_number?: string
+          nationality?: string
+          phone?: string
+          postal_code?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      driver_registrations: {
+        Row: {
+          address: string
+          asa: string
+          birth_date: string
+          city: string
+          country: string
+          created_at: string
+          emergency_contact_name: string
+          emergency_contact_phone: string
+          first_name: string
+          id: string
+          last_name: string
+          license_expiry: string
+          license_number: string
+          nationality: string
+          phone: string
+          postal_code: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          asa: string
+          birth_date: string
+          city: string
+          country: string
+          created_at?: string
+          emergency_contact_name: string
+          emergency_contact_phone: string
+          first_name: string
+          id?: string
+          last_name: string
+          license_expiry: string
+          license_number: string
+          nationality: string
+          phone: string
+          postal_code: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          asa?: string
+          birth_date?: string
+          city?: string
+          country?: string
+          created_at?: string
+          emergency_contact_name?: string
+          emergency_contact_phone?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          license_expiry?: string
+          license_number?: string
+          nationality?: string
+          phone?: string
+          postal_code?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       driver_safety_equipment: {
         Row: {
           co_pilot_blood_type: string | null

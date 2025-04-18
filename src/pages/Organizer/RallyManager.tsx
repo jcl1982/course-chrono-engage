@@ -1,11 +1,12 @@
 
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
 import { RallyTable } from "@/components/rally/RallyTable";
+import { useState } from "react";
+import { RallyFormDialog } from "@/components/rally/RallyFormDialog";
 
 const RallyManager = () => {
-  const { toast } = useToast();
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
@@ -15,7 +16,7 @@ const RallyManager = () => {
           <p className="text-gray-400">Gérez vos rallyes, leurs étapes et les inscriptions</p>
         </div>
         <Button 
-          onClick={() => toast({ title: "Bientôt disponible", description: "La création de rallye sera disponible prochainement" })}
+          onClick={() => setIsFormOpen(true)}
           className="bg-red-500 hover:bg-red-600"
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -26,6 +27,11 @@ const RallyManager = () => {
       <div className="grid gap-6">
         <RallyTable />
       </div>
+
+      <RallyFormDialog
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+      />
     </div>
   );
 };

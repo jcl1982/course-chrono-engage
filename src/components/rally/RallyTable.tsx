@@ -7,16 +7,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { formatDistance } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar, MapPin, Users } from "lucide-react";
+import { Calendar, MapPin, Users, Pencil, Trash2 } from "lucide-react";
 import { type Database } from "@/integrations/supabase/types";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { RallyFormDialog } from "./RallyFormDialog";
+import { DeleteRallyDialog } from "./DeleteRallyDialog";
+import { useToast } from "@/hooks/use-toast";
 
 type Rally = Database["public"]["Tables"]["rallies"]["Row"];
 
 export const RallyTable = () => {
+  const { toast } = useToast();
+  const [selectedRally, setSelectedRally] = useState<Rally | undefined>();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const { data: rallies, isLoading } = useQuery({
     queryKey: ["rallies"],
     queryFn: async () => {
@@ -30,58 +40,122 @@ export const RallyTable = () => {
     },
   });
 
+  const handleDelete = async () => {
+    if (!selectedRally) return;
+
+    try {
+      const { error } = await supabase
+        .from("rallies")
+        .delete()
+        .eq("id", selectedRally.id);
+
+      if (error) throw error;
+
+      toast({ title: "Rallye supprimé avec succès" });
+      setIsDeleteOpen(false);
+    } catch (error) {
+      console.error("Error deleting rally:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression du rallye",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return <p className="text-gray-400">Chargement des rallyes...</p>;
   }
 
   return (
-    <div className="rounded-md border border-red-900 bg-[#1a1a1a]">
-      <Table>
-        <TableHeader>
-          <TableRow className="hover:bg-red-950/50">
-            <TableHead className="text-red-500">Nom</TableHead>
-            <TableHead className="text-red-500">Localisation</TableHead>
-            <TableHead className="text-red-500">Date</TableHead>
-            <TableHead className="text-red-500">Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rallies?.map((rally) => (
-            <TableRow key={rally.id} className="hover:bg-red-950/50">
-              <TableCell className="font-medium text-white">{rally.name}</TableCell>
-              <TableCell className="text-gray-300">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-red-500" />
-                  {rally.location}
-                </div>
-              </TableCell>
-              <TableCell className="text-gray-300">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-red-500" />
-                  {formatDistance(new Date(rally.start_date), new Date(), {
-                    addSuffix: true,
-                    locale: fr,
-                  })}
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-red-500" />
-                  <span 
-                    className={`rounded-full px-2 py-1 text-xs ${
-                      rally.registration_open 
-                        ? "bg-green-500/20 text-green-500" 
-                        : "bg-red-500/20 text-red-500"
-                    }`}
-                  >
-                    {rally.registration_open ? "Inscriptions ouvertes" : "Inscriptions fermées"}
-                  </span>
-                </div>
-              </TableCell>
+    <>
+      <div className="rounded-md border border-red-900 bg-[#1a1a1a]">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-red-950/50">
+              <TableHead className="text-red-500">Nom</TableHead>
+              <TableHead className="text-red-500">Localisation</TableHead>
+              <TableHead className="text-red-500">Date</TableHead>
+              <TableHead className="text-red-500">Status</TableHead>
+              <TableHead className="text-red-500">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {rallies?.map((rally) => (
+              <TableRow key={rally.id} className="hover:bg-red-950/50">
+                <TableCell className="font-medium text-white">{rally.name}</TableCell>
+                <TableCell className="text-gray-300">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-red-500" />
+                    {rally.location}
+                  </div>
+                </TableCell>
+                <TableCell className="text-gray-300">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-red-500" />
+                    {formatDistance(new Date(rally.start_date), new Date(), {
+                      addSuffix: true,
+                      locale: fr,
+                    })}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-red-500" />
+                    <span 
+                      className={`rounded-full px-2 py-1 text-xs ${
+                        rally.registration_open 
+                          ? "bg-green-500/20 text-green-500" 
+                          : "bg-red-500/20 text-red-500"
+                      }`}
+                    >
+                      {rally.registration_open ? "Inscriptions ouvertes" : "Inscriptions fermées"}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setSelectedRally(rally);
+                        setIsFormOpen(true);
+                      }}
+                      className="h-8 w-8 text-red-500 hover:bg-red-950/50"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setSelectedRally(rally);
+                        setIsDeleteOpen(true);
+                      }}
+                      className="h-8 w-8 text-red-500 hover:bg-red-950/50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <RallyFormDialog
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        rally={selectedRally}
+      />
+
+      <DeleteRallyDialog
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        onConfirm={handleDelete}
+      />
+    </>
   );
 };

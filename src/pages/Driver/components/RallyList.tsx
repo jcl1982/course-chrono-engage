@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,7 +52,7 @@ const RallyList = ({ userId }: { userId?: string }) => {
     setRegisteredRallies(data.map(reg => reg.rally_id));
   };
 
-  const handleRegister = async (rallyId: string) => {
+  const handleRegisterClick = (rallyId: string) => {
     if (!userId) {
       toast({
         title: "Non authentifié",
@@ -63,31 +62,8 @@ const RallyList = ({ userId }: { userId?: string }) => {
       navigate("/auth");
       return;
     }
-
-    try {
-      const { error } = await supabase
-        .from('registrations')
-        .insert([{
-          driver_id: userId,
-          rally_id: rallyId,
-          status: 'pending'
-        }]);
-
-      if (error) throw error;
-
-      await fetchUserRegistrations();
-      toast({
-        title: "Inscription réussie",
-        description: "Votre inscription au rallye a été enregistrée"
-      });
-    } catch (error) {
-      console.error("Error registering for rally:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'inscription",
-        variant: "destructive",
-      });
-    }
+    
+    navigate(`/registration/${rallyId}`);
   };
 
   if (!rallies.length) {
@@ -112,7 +88,7 @@ const RallyList = ({ userId }: { userId?: string }) => {
             variant="outline" 
             size="sm" 
             className="w-full border-red-800 text-red-400 hover:bg-red-900/20"
-            onClick={() => handleRegister(rally.id)}
+            onClick={() => handleRegisterClick(rally.id)}
             disabled={registeredRallies.includes(rally.id)}
           >
             {registeredRallies.includes(rally.id) ? 'Déjà inscrit' : 'S\'inscrire'}

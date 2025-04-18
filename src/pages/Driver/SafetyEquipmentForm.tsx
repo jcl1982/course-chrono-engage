@@ -22,7 +22,7 @@ interface SafetyEquipmentFormProps {
 }
 
 const SafetyEquipmentForm = ({ type }: SafetyEquipmentFormProps) => {
-  const { form, loading, onSubmit, fetchEquipment } = useSafetyEquipmentForm(type);
+  const { form, loading, submitting, onSubmit, fetchEquipment } = useSafetyEquipmentForm(type);
 
   useEffect(() => {
     fetchEquipment();
@@ -59,7 +59,7 @@ const SafetyEquipmentForm = ({ type }: SafetyEquipmentFormProps) => {
             </>
           )}
         </div>
-        <FormActions />
+        <FormActions submitting={submitting} />
       </form>
     </Form>
   );

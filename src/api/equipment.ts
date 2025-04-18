@@ -29,24 +29,53 @@ export const saveEquipment = async (
   id?: string
 ) => {
   try {
+    console.log("Saving equipment data:", JSON.stringify(equipmentData, null, 2));
+    console.log("Equipment ID:", id);
+    
+    // Préparer les données pour Supabase en supprimant les champs vides pour le copilote
+    // si le type d'équipement est "driver" seulement
+    const cleanedData = Object.fromEntries(
+      Object.entries(equipmentData).filter(([key, value]) => {
+        // Ne pas filtrer les champs du copilote si la valeur n'est pas vide
+        return value !== "" && value !== null && value !== undefined;
+      })
+    );
+    
+    console.log("Cleaned data:", JSON.stringify(cleanedData, null, 2));
+
     if (id) {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('driver_safety_equipment')
-        .update(equipmentData)
-        .eq('id', id);
+        .update(cleanedData)
+        .eq('id', id)
+        .select();
 
-      if (error) throw error;
-      return { message: "Équipement mis à jour avec succès" };
+      if (error) {
+        console.error("Error updating equipment:", error);
+        throw new ApiError("Impossible de mettre à jour l'équipement: " + error.message);
+      }
+      
+      console.log("Update successful:", data);
+      return { message: "Équipement mis à jour avec succès", data };
     } else {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('driver_safety_equipment')
-        .insert(equipmentData);
+        .insert(cleanedData)
+        .select();
 
-      if (error) throw error;
-      return { message: "Équipement enregistré avec succès" };
+      if (error) {
+        console.error("Error inserting equipment:", error);
+        throw new ApiError("Impossible d'enregistrer l'équipement: " + error.message);
+      }
+      
+      console.log("Insert successful:", data);
+      return { message: "Équipement enregistré avec succès", data };
     }
   } catch (error) {
     console.error("Error saving equipment:", error);
+    if (error instanceof ApiError) {
+      throw error;
+    }
     throw new ApiError("Impossible d'enregistrer l'équipement");
   }
 };

@@ -2,7 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-const FormActions = () => {
+interface FormActionsProps {
+  submitting?: boolean;
+}
+
+const FormActions = ({ submitting = false }: FormActionsProps) => {
   const navigate = useNavigate();
 
   return (
@@ -11,11 +15,12 @@ const FormActions = () => {
         type="button" 
         variant="outline" 
         onClick={() => navigate('/driver')}
+        disabled={submitting}
       >
         Annuler
       </Button>
-      <Button type="submit">
-        Enregistrer
+      <Button type="submit" disabled={submitting}>
+        {submitting ? "Enregistrement en cours..." : "Enregistrer"}
       </Button>
     </div>
   );

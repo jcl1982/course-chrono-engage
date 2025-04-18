@@ -14,6 +14,7 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(id ? true : false);
+  const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<EquipmentFormData>({
     resolver: zodResolver(equipmentSchema),
@@ -91,29 +92,42 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
 
   const onSubmit = async (data: EquipmentFormData) => {
     try {
+      setSubmitting(true);
+      
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
         throw new Error("Utilisateur non connecté");
       }
 
+      console.log("Submitting form data:", JSON.stringify(data, null, 2));
+      console.log("User ID:", userData.user.id);
+      
       const equipmentData = {
         ...data,
         driver_id: userData.user.id,
       };
       
-      const { message } = await saveEquipment(equipmentData, id);
+      const result = await saveEquipment(equipmentData, id);
       
       toast({
         title: "Succès",
-        description: message,
+        description: result.message,
       });
       
       navigate('/driver');
     } catch (error) {
+      console.error("Form submission error:", error);
+      
       if (error instanceof ApiError) {
         toast({
           title: "Erreur",
           description: error.message,
+          variant: "destructive",
+        });
+      } else if (error instanceof Error) {
+        toast({
+          title: "Erreur",
+          description: error.message || "Une erreur inattendue s'est produite",
           variant: "destructive",
         });
       } else {
@@ -123,12 +137,15 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
           variant: "destructive",
         });
       }
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return {
     form,
     loading,
+    submitting,
     onSubmit,
     fetchEquipment,
   };

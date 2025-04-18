@@ -4,12 +4,16 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { BasicVehicleInfo } from "./vehicle-form/BasicVehicleInfo";
 import { TechnicalDetails } from "./vehicle-form/TechnicalDetails";
 import { vehicleSchema, type VehicleFormData } from "./vehicle-form/schema";
 
-const VehicleForm = () => {
+interface VehicleFormProps {
+  onSuccess?: () => void;
+}
+
+const VehicleForm = ({ onSuccess }: VehicleFormProps) => {
   const form = useForm<VehicleFormData>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
@@ -27,6 +31,8 @@ const VehicleForm = () => {
       registrationNumber: "N/A",
     },
   });
+
+  const { toast } = useToast();
 
   const onSubmit = async (data: VehicleFormData) => {
     try {
@@ -70,6 +76,10 @@ const VehicleForm = () => {
         title: "Succès",
         description: "Véhicule enregistré avec succès",
       });
+      
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       console.error("Error creating vehicle:", error);
     }

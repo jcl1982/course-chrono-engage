@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { BasicVehicleInfo } from "./vehicle-form/BasicVehicleInfo";
 import { TechnicalDetails } from "./vehicle-form/TechnicalDetails";
-import { vehicleSchema, type VehicleFormData } from "./vehicle-form/schema";
+import { vehicleSchema, type VehicleFormData } from "./vehicle-form/schemas/vehicleSchema";
 
 interface VehicleFormProps {
   onSuccess?: () => void;

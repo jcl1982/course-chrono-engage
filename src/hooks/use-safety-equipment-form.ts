@@ -18,6 +18,7 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
   const form = useForm({
     resolver: zodResolver(equipmentSchema),
     defaultValues: {
+      // Driver equipment fields
       helmet_brand: "",
       helmet_model: "",
       helmet_homologation: "",
@@ -37,6 +38,26 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
       hans_brand: "",
       hans_homologation: "",
       hans_expiry_date: "",
+      // Co-pilot equipment fields (prefixed with copilot_)
+      copilot_helmet_brand: "",
+      copilot_helmet_model: "",
+      copilot_helmet_homologation: "",
+      copilot_helmet_expiry_date: "",
+      copilot_suit_brand: "",
+      copilot_suit_homologation: "",
+      copilot_suit_expiry_date: "",
+      copilot_underwear_brand: "",
+      copilot_underwear_homologation: "",
+      copilot_underwear_expiry_date: "",
+      copilot_shoes_brand: "",
+      copilot_shoes_homologation: "",
+      copilot_shoes_expiry_date: "",
+      copilot_gloves_brand: "",
+      copilot_gloves_homologation: "",
+      copilot_gloves_expiry_date: "",
+      copilot_hans_brand: "",
+      copilot_hans_homologation: "",
+      copilot_hans_expiry_date: "",
     }
   });
 
@@ -46,26 +67,16 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
         try {
           setLoading(true);
           
-          console.log(`Fetching ${equipmentType} equipment with ID: ${id}`);
-          
-          // Using only the driver_safety_equipment table
-          const query = supabase
+          const { data, error } = await supabase
             .from("driver_safety_equipment")
             .select("*")
-            .eq("id", id);
-          
-          // Add a condition for copilot equipment if needed in the future
-          // This comment is kept as a placeholder for future enhancement
-          
-          const { data, error } = await query.single();
+            .eq("id", id)
+            .single();
 
           if (error) throw error;
           
           if (data) {
             console.log(`Found equipment:`, data);
-            
-            // Map the data to the form fields based on the equipment type
-            // For now, we're using the same fields for both types
             form.reset(data);
           }
         } catch (error) {
@@ -82,7 +93,7 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
     };
 
     fetchEquipment();
-  }, [id, form, toast, equipmentType]);
+  }, [id, form, toast]);
 
   const onSubmit = async (data: any) => {
     try {
@@ -92,9 +103,6 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
         throw new Error("Utilisateur non authentifié");
       }
 
-      console.log(`Saving ${equipmentType} equipment`, data);
-      
-      // Create a properly typed object for insertion
       const equipmentData = {
         ...data,
         driver_id: user.data.user.id,
@@ -103,13 +111,11 @@ export const useSafetyEquipmentForm = (equipmentType: EquipmentType = "driver") 
       let result;
       
       if (id) {
-        // Update existing record
         result = await supabase
           .from("driver_safety_equipment")
           .update(equipmentData)
           .eq("id", id);
       } else {
-        // Insert new record
         result = await supabase
           .from("driver_safety_equipment")
           .insert(equipmentData);

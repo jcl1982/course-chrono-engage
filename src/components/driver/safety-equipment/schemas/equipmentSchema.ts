@@ -28,7 +28,7 @@ export const equipmentSchema = z.object({
   hans_homologation: z.string().min(1, "Le numéro d'homologation FIA est requis"),
   hans_expiry_date: z.string().min(1, "La date d'expiration est requise"),
 
-  // Copilot Equipment (same validation as driver)
+  // Copilot Equipment - Making fields optional allows partial saving for copilot equipment
   copilot_helmet_brand: z.string().optional(),
   copilot_helmet_model: z.string().optional(),
   copilot_helmet_homologation: z.string().optional(),

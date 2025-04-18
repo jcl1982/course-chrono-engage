@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import type { EquipmentFormData } from "@/types/equipment";
 import { Tables, TablesInsert } from "@/integrations/supabase/types";
@@ -41,17 +42,14 @@ export const saveEquipment = async (
     
     // Create a properly typed object for insertion by filtering out empty values
     // but making sure to include driver_id which is required
-    const cleanedData = {
-      driver_id,
-      ...Object.fromEntries(
-        Object.entries(equipmentData).filter(([key, value]) => {
-          // Don't filter out driver_id even if it's empty (which shouldn't happen)
-          if (key === 'driver_id') return true;
-          // Filter out empty values for all other fields
-          return value !== "" && value !== null && value !== undefined;
-        })
-      )
-    } as TablesInsert<"driver_safety_equipment">;
+    const cleanedData = Object.fromEntries(
+      Object.entries(equipmentData).filter(([key, value]) => {
+        // Don't filter out driver_id even if it's empty (which shouldn't happen)
+        if (key === 'driver_id') return true;
+        // Filter out empty values for all other fields
+        return value !== "" && value !== null && value !== undefined;
+      })
+    ) as TablesInsert<"driver_safety_equipment">;
     
     console.log("Cleaned data:", JSON.stringify(cleanedData, null, 2));
 

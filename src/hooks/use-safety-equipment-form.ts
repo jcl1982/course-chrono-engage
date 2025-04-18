@@ -69,6 +69,7 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
     try {
       const data = await fetchEquipmentById(id);
       if (data) {
+        console.log("Fetched equipment data:", data);
         form.reset(data);
       }
     } catch (error) {

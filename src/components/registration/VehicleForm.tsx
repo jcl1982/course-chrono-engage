@@ -87,7 +87,7 @@ const VehicleForm = ({ onSuccess }: VehicleFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-black">
         <BasicVehicleInfo />
         <TechnicalDetails />
         <div className="md:col-span-2">

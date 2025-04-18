@@ -17,6 +17,7 @@ export const BasicVehicleInfo = () => {
         label="Marque"
         description="Marque du constructeur du véhicule"
         placeholder="Ex: Renault, Peugeot..."
+        className="text-black"
       />
 
       <FormInput
@@ -24,6 +25,7 @@ export const BasicVehicleInfo = () => {
         label="Modèle"
         description="Modèle spécifique du véhicule"
         placeholder="Ex: Clio, 208..."
+        className="text-black"
       />
 
       <FormInput
@@ -31,6 +33,7 @@ export const BasicVehicleInfo = () => {
         label="Année"
         description="Année de fabrication du véhicule (YYYY)"
         placeholder="Ex: 2024"
+        className="text-black"
       />
 
       <FormSelect
@@ -39,6 +42,7 @@ export const BasicVehicleInfo = () => {
         description="Groupe de classification FIA du véhicule"
         placeholder="Sélectionner le groupe"
         options={groupOptions}
+        className="text-black"
       />
     </div>
   );

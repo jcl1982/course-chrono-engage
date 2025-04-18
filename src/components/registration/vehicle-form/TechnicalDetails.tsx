@@ -9,6 +9,7 @@ export const TechnicalDetails = () => {
         label="Passeport Technique"
         description="Numéro du passeport technique FFSA"
         placeholder="Ex: PT123456"
+        className="text-black"
       />
 
       <FormInput
@@ -16,6 +17,7 @@ export const TechnicalDetails = () => {
         label="Cylindrée"
         description="Cylindrée du moteur en cm³"
         placeholder="Ex: 1600"
+        className="text-black"
       />
 
       <FormInput
@@ -23,6 +25,7 @@ export const TechnicalDetails = () => {
         label="Classe"
         description="Classe de cylindrée du véhicule"
         placeholder="Ex: RC4"
+        className="text-black"
       />
 
       <FormInput
@@ -30,6 +33,7 @@ export const TechnicalDetails = () => {
         label="Numéro d'homologation"
         description="Numéro d'homologation FIA/FFSA"
         placeholder="Ex: A-5731"
+        className="text-black"
       />
     </div>
   );

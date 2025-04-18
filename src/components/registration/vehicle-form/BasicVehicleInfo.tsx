@@ -1,5 +1,5 @@
 
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import {
@@ -21,8 +21,11 @@ export const BasicVehicleInfo = () => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Marque</FormLabel>
+            <FormDescription>
+              Marque du constructeur du véhicule
+            </FormDescription>
             <FormControl>
-              <Input placeholder="Marque du véhicule" {...field} />
+              <Input placeholder="Ex: Renault, Peugeot..." {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -35,8 +38,11 @@ export const BasicVehicleInfo = () => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Modèle</FormLabel>
+            <FormDescription>
+              Modèle spécifique du véhicule
+            </FormDescription>
             <FormControl>
-              <Input placeholder="Modèle du véhicule" {...field} />
+              <Input placeholder="Ex: Clio, 208..." {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -49,8 +55,11 @@ export const BasicVehicleInfo = () => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Année</FormLabel>
+            <FormDescription>
+              Année de fabrication du véhicule (YYYY)
+            </FormDescription>
             <FormControl>
-              <Input placeholder="Année du véhicule" {...field} />
+              <Input placeholder="Ex: 2024" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -63,6 +72,9 @@ export const BasicVehicleInfo = () => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Groupe</FormLabel>
+            <FormDescription>
+              Groupe de classification FIA du véhicule
+            </FormDescription>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>

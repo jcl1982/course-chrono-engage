@@ -1,5 +1,5 @@
 
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 
@@ -14,8 +14,11 @@ export const TechnicalDetails = () => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Passeport Technique</FormLabel>
+            <FormDescription>
+              Numéro du passeport technique FFSA
+            </FormDescription>
             <FormControl>
-              <Input placeholder="Numéro de passeport technique" {...field} />
+              <Input placeholder="Ex: PT123456" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -28,8 +31,11 @@ export const TechnicalDetails = () => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Cylindrée</FormLabel>
+            <FormDescription>
+              Cylindrée du moteur en cm³
+            </FormDescription>
             <FormControl>
-              <Input placeholder="Cylindrée (cm³)" {...field} />
+              <Input placeholder="Ex: 1600" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -42,8 +48,11 @@ export const TechnicalDetails = () => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Classe</FormLabel>
+            <FormDescription>
+              Classe de cylindrée du véhicule
+            </FormDescription>
             <FormControl>
-              <Input placeholder="Classe" {...field} />
+              <Input placeholder="Ex: RC4" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

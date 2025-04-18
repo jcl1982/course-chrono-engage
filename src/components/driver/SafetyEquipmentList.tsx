@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -80,8 +79,8 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
     }
   };
 
-  const handleAddNew = () => {
-    navigate('/driver/equipment/new');
+  const handleAddNew = (type: "driver" | "copilot") => {
+    navigate(type === "driver" ? '/driver/equipment/new' : '/driver/equipment/copilot/new');
   };
 
   if (loading) {
@@ -92,9 +91,14 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
     return (
       <div className="text-center space-y-4 py-6">
         <p className="text-gray-400">Vous n'avez pas encore enregistré d'équipement.</p>
-        <Button onClick={handleAddNew}>
-          Ajouter un équipement
-        </Button>
+        <div className="space-x-4">
+          <Button onClick={() => handleAddNew("driver")}>
+            Ajouter un équipement pilote
+          </Button>
+          <Button onClick={() => handleAddNew("copilot")} variant="outline">
+            Ajouter un équipement copilote
+          </Button>
+        </div>
       </div>
     );
   }
@@ -129,9 +133,12 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
         </Card>
       ))}
       
-      <div className="flex justify-center">
-        <Button onClick={handleAddNew} variant="outline">
-          Ajouter un nouvel équipement
+      <div className="flex justify-center space-x-4">
+        <Button onClick={() => handleAddNew("driver")} variant="outline">
+          Ajouter un équipement pilote
+        </Button>
+        <Button onClick={() => handleAddNew("copilot")} variant="outline">
+          Ajouter un équipement copilote
         </Button>
       </div>
 

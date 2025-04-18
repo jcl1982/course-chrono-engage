@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -30,8 +31,10 @@ const App = () => (
           <Route path="/organizer" element={<OrganizerSpace />} />
           <Route path="/driver" element={<DriverSpace />} />
           <Route path="/driver/vehicle/new" element={<VehicleNew />} />
-          <Route path="/driver/equipment/new" element={<SafetyEquipmentForm />} />
-          <Route path="/driver/equipment/:id" element={<SafetyEquipmentForm />} />
+          <Route path="/driver/equipment/new" element={<SafetyEquipmentForm type="driver" />} />
+          <Route path="/driver/equipment/copilot/new" element={<SafetyEquipmentForm type="copilot" />} />
+          <Route path="/driver/equipment/:id" element={<SafetyEquipmentForm type="driver" />} />
+          <Route path="/driver/equipment/copilot/:id" element={<SafetyEquipmentForm type="copilot" />} />
           <Route path="/organizer/rallies" element={<RallyManager />} />
           <Route path="/organizer/participants" element={<ParticipantManager />} />
           <Route path="/organizer/statistics" element={<Statistics />} />

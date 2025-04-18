@@ -5,14 +5,16 @@ import { useNavigate } from "react-router-dom";
 
 interface EquipmentActionsProps {
   equipmentId: string;
+  type: "driver" | "copilot";
   onDeleteClick: () => void;
 }
 
-const EquipmentActions = ({ equipmentId, onDeleteClick }: EquipmentActionsProps) => {
+const EquipmentActions = ({ equipmentId, type, onDeleteClick }: EquipmentActionsProps) => {
   const navigate = useNavigate();
 
   const handleEditClick = () => {
-    navigate(`/driver/equipment/${equipmentId}`);
+    const basePath = type === "driver" ? "/driver/equipment/" : "/driver/equipment/copilot/";
+    navigate(`${basePath}${equipmentId}`);
   };
 
   return (

@@ -1,96 +1,44 @@
 
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useFormContext } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
 
 export const BasicVehicleInfo = () => {
-  const form = useFormContext();
+  const groupOptions = [
+    { value: "A", label: "Groupe A" },
+    { value: "N", label: "Groupe N" },
+    { value: "R", label: "Groupe R" },
+    { value: "F2000", label: "F2000" },
+  ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <FormField
-        control={form.control}
+      <FormInput
         name="brand"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Marque</FormLabel>
-            <FormDescription>
-              Marque du constructeur du véhicule
-            </FormDescription>
-            <FormControl>
-              <Input placeholder="Ex: Renault, Peugeot..." {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Marque"
+        description="Marque du constructeur du véhicule"
+        placeholder="Ex: Renault, Peugeot..."
       />
 
-      <FormField
-        control={form.control}
+      <FormInput
         name="model"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Modèle</FormLabel>
-            <FormDescription>
-              Modèle spécifique du véhicule
-            </FormDescription>
-            <FormControl>
-              <Input placeholder="Ex: Clio, 208..." {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Modèle"
+        description="Modèle spécifique du véhicule"
+        placeholder="Ex: Clio, 208..."
       />
 
-      <FormField
-        control={form.control}
+      <FormInput
         name="year"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Année</FormLabel>
-            <FormDescription>
-              Année de fabrication du véhicule (YYYY)
-            </FormDescription>
-            <FormControl>
-              <Input placeholder="Ex: 2024" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Année"
+        description="Année de fabrication du véhicule (YYYY)"
+        placeholder="Ex: 2024"
       />
 
-      <FormField
-        control={form.control}
+      <FormSelect
         name="group"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Groupe</FormLabel>
-            <FormDescription>
-              Groupe de classification FIA du véhicule
-            </FormDescription>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionner le groupe" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectItem value="A">Groupe A</SelectItem>
-                <SelectItem value="N">Groupe N</SelectItem>
-                <SelectItem value="R">Groupe R</SelectItem>
-                <SelectItem value="F2000">F2000</SelectItem>
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Groupe"
+        description="Groupe de classification FIA du véhicule"
+        placeholder="Sélectionner le groupe"
+        options={groupOptions}
       />
     </div>
   );

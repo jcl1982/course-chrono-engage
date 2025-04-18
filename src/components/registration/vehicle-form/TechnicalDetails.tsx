@@ -1,62 +1,28 @@
 
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useFormContext } from "react-hook-form";
+import { FormInput } from "@/components/form/FormInput";
 
 export const TechnicalDetails = () => {
-  const form = useFormContext();
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <FormField
-        control={form.control}
+      <FormInput
         name="technicalPassport"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Passeport Technique</FormLabel>
-            <FormDescription>
-              Numéro du passeport technique FFSA
-            </FormDescription>
-            <FormControl>
-              <Input placeholder="Ex: PT123456" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Passeport Technique"
+        description="Numéro du passeport technique FFSA"
+        placeholder="Ex: PT123456"
       />
 
-      <FormField
-        control={form.control}
+      <FormInput
         name="engineCapacity"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Cylindrée</FormLabel>
-            <FormDescription>
-              Cylindrée du moteur en cm³
-            </FormDescription>
-            <FormControl>
-              <Input placeholder="Ex: 1600" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Cylindrée"
+        description="Cylindrée du moteur en cm³"
+        placeholder="Ex: 1600"
       />
 
-      <FormField
-        control={form.control}
+      <FormInput
         name="class"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Classe</FormLabel>
-            <FormDescription>
-              Classe de cylindrée du véhicule
-            </FormDescription>
-            <FormControl>
-              <Input placeholder="Ex: RC4" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Classe"
+        description="Classe de cylindrée du véhicule"
+        placeholder="Ex: RC4"
       />
     </div>
   );

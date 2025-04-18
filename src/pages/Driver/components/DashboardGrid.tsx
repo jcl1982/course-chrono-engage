@@ -1,10 +1,10 @@
-
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import DashboardCard from "./DashboardCard";
 import VehicleList from "./VehicleList";
 import RegistrationList from "./RegistrationList";
+import RallyList from "./RallyList";
 
 interface DashboardGridProps {
   userId?: string;
@@ -15,6 +15,13 @@ const DashboardGrid: FC<DashboardGridProps> = ({ userId }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <DashboardCard
+        title="Rallyes à venir"
+        description="Liste des rallyes ouverts aux inscriptions"
+      >
+        <RallyList userId={userId} />
+      </DashboardCard>
+
       <DashboardCard
         title="Mes Inscriptions"
         description="Vos inscriptions aux rallyes"

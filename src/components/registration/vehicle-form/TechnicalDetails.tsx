@@ -24,6 +24,13 @@ export const TechnicalDetails = () => {
         description="Classe de cylindrée du véhicule"
         placeholder="Ex: RC4"
       />
+
+      <FormInput
+        name="homologationNumber"
+        label="Numéro d'homologation"
+        description="Numéro d'homologation FIA/FFSA"
+        placeholder="Ex: A-5731"
+      />
     </div>
   );
 };

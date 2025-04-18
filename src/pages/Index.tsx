@@ -8,9 +8,16 @@ const Index = () => {
     <div className="min-h-screen bg-black text-white">
       <header className="bg-[#222222] shadow-sm border-b border-red-800">
         <div className="container mx-auto py-4 px-4 md:px-6 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-red-500">Chrono Engage</h1>
-            <p className="text-gray-300">Plateforme de gestion des rallyes</p>
+          <div className="flex items-center gap-4">
+            <img 
+              src="/lovable-uploads/2287430e-f1d1-4b1f-9d69-6eb49e27036f.png" 
+              alt="Association Sportive Automobile de Guadeloupe" 
+              className="h-12 w-12"
+            />
+            <div>
+              <h1 className="text-3xl font-bold text-red-500">Chrono Engage</h1>
+              <p className="text-gray-300">Plateforme de gestion des rallyes</p>
+            </div>
           </div>
           <Link to="/auth">
             <Button variant="destructive" className="bg-red-700 hover:bg-red-800">

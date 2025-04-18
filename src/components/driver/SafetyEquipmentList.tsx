@@ -93,10 +93,16 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
       <div className="text-center space-y-4 py-6">
         <p className="text-gray-400">Vous n'avez pas encore enregistré d'équipement.</p>
         <div className="space-x-4">
-          <Button onClick={() => handleAddNew("driver")}>
+          <Button 
+            onClick={() => handleAddNew("driver")} 
+            className="bg-[#ea384c] text-white hover:bg-[#c62d3f]"
+          >
             Ajouter un équipement pilote
           </Button>
-          <Button onClick={() => handleAddNew("copilot")} variant="outline">
+          <Button 
+            onClick={() => handleAddNew("copilot")} 
+            className="bg-[#ea384c] text-white hover:bg-[#c62d3f]"
+          >
             Ajouter un équipement copilote
           </Button>
         </div>
@@ -136,10 +142,18 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
       ))}
       
       <div className="flex justify-center space-x-4">
-        <Button onClick={() => handleAddNew("driver")} variant="outline">
+        <Button 
+          onClick={() => handleAddNew("driver")} 
+          variant="outline" 
+          className="bg-[#ea384c] text-white hover:bg-[#c62d3f]"
+        >
           Ajouter un équipement pilote
         </Button>
-        <Button onClick={() => handleAddNew("copilot")} variant="outline">
+        <Button 
+          onClick={() => handleAddNew("copilot")} 
+          variant="outline" 
+          className="bg-[#ea384c] text-white hover:bg-[#c62d3f]"
+        >
           Ajouter un équipement copilote
         </Button>
       </div>

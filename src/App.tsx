@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +9,9 @@ import RegistrationForm from "./pages/Registration/RegistrationForm";
 import OrganizerSpace from "./pages/Organizer/Index";
 import DriverSpace from "./pages/Driver/Index";
 import VehicleNew from "./pages/Driver/VehicleNew";
+import RallyManager from "./pages/Organizer/RallyManager";
+import ParticipantManager from "./pages/Organizer/ParticipantManager";
+import Statistics from "./pages/Organizer/Statistics";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +27,10 @@ const App = () => (
           <Route path="/organizer" element={<OrganizerSpace />} />
           <Route path="/driver" element={<DriverSpace />} />
           <Route path="/driver/vehicle/new" element={<VehicleNew />} />
+          <Route path="/organizer" element={<OrganizerSpace />} />
+          <Route path="/organizer/rallies" element={<RallyManager />} />
+          <Route path="/organizer/participants" element={<ParticipantManager />} />
+          <Route path="/organizer/statistics" element={<Statistics />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

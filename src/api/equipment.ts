@@ -1,6 +1,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import type { EquipmentFormData } from "@/types/equipment";
+import { Tables } from "@/integrations/supabase/types";
 
 export class ApiError extends Error {
   constructor(message: string) {
@@ -32,14 +33,26 @@ export const saveEquipment = async (
     console.log("Saving equipment data:", JSON.stringify(equipmentData, null, 2));
     console.log("Equipment ID:", id);
     
-    // Préparer les données pour Supabase en supprimant les champs vides pour le copilote
-    // si le type d'équipement est "driver" seulement
-    const cleanedData = Object.fromEntries(
-      Object.entries(equipmentData).filter(([key, value]) => {
-        // Ne pas filtrer les champs du copilote si la valeur n'est pas vide
-        return value !== "" && value !== null && value !== undefined;
-      })
-    );
+    // We need to ensure driver_id is always included
+    const { driver_id } = equipmentData;
+    
+    if (!driver_id) {
+      throw new ApiError("L'ID du conducteur est manquant");
+    }
+    
+    // Create a properly typed object for insertion by filtering out empty values
+    // but making sure to include driver_id which is required
+    const cleanedData: Tables<"driver_safety_equipment">["Insert"] = {
+      driver_id,
+      ...Object.fromEntries(
+        Object.entries(equipmentData).filter(([key, value]) => {
+          // Don't filter out driver_id even if it's empty (which shouldn't happen)
+          if (key === 'driver_id') return true;
+          // Filter out empty values for all other fields
+          return value !== "" && value !== null && value !== undefined;
+        })
+      )
+    };
     
     console.log("Cleaned data:", JSON.stringify(cleanedData, null, 2));
 

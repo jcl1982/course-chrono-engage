@@ -1,7 +1,6 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import type { EquipmentFormData } from "@/types/equipment";
-import { Tables } from "@/integrations/supabase/types";
+import { Tables, TablesInsert } from "@/integrations/supabase/types";
 
 export class ApiError extends Error {
   constructor(message: string) {
@@ -42,7 +41,7 @@ export const saveEquipment = async (
     
     // Create a properly typed object for insertion by filtering out empty values
     // but making sure to include driver_id which is required
-    const cleanedData: Tables<"driver_safety_equipment">["Insert"] = {
+    const cleanedData = {
       driver_id,
       ...Object.fromEntries(
         Object.entries(equipmentData).filter(([key, value]) => {
@@ -52,7 +51,7 @@ export const saveEquipment = async (
           return value !== "" && value !== null && value !== undefined;
         })
       )
-    };
+    } as TablesInsert<"driver_safety_equipment">;
     
     console.log("Cleaned data:", JSON.stringify(cleanedData, null, 2));
 

@@ -42,12 +42,22 @@ const SafetyEquipmentForm = () => {
   const onSubmit = async (data: EquipmentFormData) => {
     try {
       const user = await supabase.auth.getUser();
+      
+      // Ensure all required fields are present before insert
+      const equipmentData = {
+        helmet_brand: data.helmet_brand,
+        helmet_model: data.helmet_model,
+        helmet_homologation: data.helmet_homologation,
+        helmet_expiry_date: data.helmet_expiry_date,
+        suit_brand: data.suit_brand,
+        suit_homologation: data.suit_homologation,
+        suit_expiry_date: data.suit_expiry_date,
+        driver_id: user.data.user?.id,
+      };
+      
       const { error } = await supabase
         .from('driver_safety_equipment')
-        .insert({
-          ...data,
-          driver_id: user.data.user?.id,
-        });
+        .insert(equipmentData);
 
       if (error) throw error;
 

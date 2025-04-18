@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -95,13 +94,13 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
         <div className="space-x-4">
           <Button 
             onClick={() => handleAddNew("driver")} 
-            className="bg-[#ea384c] text-white hover:bg-[#c62d3f]"
+            className="bg-black text-white hover:bg-gray-800"
           >
             Ajouter un équipement pilote
           </Button>
           <Button 
             onClick={() => handleAddNew("copilot")} 
-            className="bg-[#ea384c] text-white hover:bg-[#c62d3f]"
+            className="bg-black text-white hover:bg-gray-800"
           >
             Ajouter un équipement copilote
           </Button>
@@ -144,15 +143,13 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
       <div className="flex justify-center space-x-4">
         <Button 
           onClick={() => handleAddNew("driver")} 
-          variant="outline" 
-          className="bg-[#ea384c] text-white hover:bg-[#c62d3f]"
+          className="bg-black text-white hover:bg-gray-800"
         >
           Ajouter un équipement pilote
         </Button>
         <Button 
           onClick={() => handleAddNew("copilot")} 
-          variant="outline" 
-          className="bg-[#ea384c] text-white hover:bg-[#c62d3f]"
+          className="bg-black text-white hover:bg-gray-800"
         >
           Ajouter un équipement copilote
         </Button>

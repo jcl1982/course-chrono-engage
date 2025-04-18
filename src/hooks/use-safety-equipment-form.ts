@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -70,7 +69,6 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
       setLoading(true);
       const data = await fetchEquipmentById(id);
       if (data) {
-        console.log("Fetched equipment data:", data);
         form.reset(data);
       }
     } catch (error) {
@@ -101,49 +99,31 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
   const onSubmit = async (data: EquipmentFormData) => {
     try {
       setSubmitting(true);
-      console.log(`Submitting ${type} equipment data:`, JSON.stringify(data, null, 2));
       
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
         throw new Error("Utilisateur non connecté");
       }
-
-      console.log("User ID:", userData.user.id);
       
       const equipmentData = {
         ...data,
         driver_id: userData.user.id,
       };
-      
-      // Extra check for co-pilot equipment to ensure at least one field is filled
+
       if (type === "copilot") {
-        console.log("Validating co-pilot data has at least one field filled");
-        const hasCopilotData = Object.entries(data).some(([key, value]) => 
-          key.startsWith('copilot_') && value && value.trim() !== ''
-        );
-        
-        if (!hasCopilotData) {
-          toast({
-            title: "Erreur",
-            description: "Veuillez remplir au moins un champ pour l'équipement du copilote",
-            variant: "destructive",
-          });
-          setSubmitting(false);
-          return;
-        }
+        console.log("Submitting copilot equipment data:", equipmentData);
       }
-      
-      console.log("About to save equipment data:", equipmentData);
+
       const result = await saveEquipment(equipmentData, id);
       console.log("Save result:", result);
-      
+
       toast({
         title: "Succès",
         description: type === "driver" 
           ? "Équipement du pilote enregistré avec succès" 
           : "Équipement du copilote enregistré avec succès",
       });
-      
+
       navigate('/driver');
     } catch (error) {
       console.error("Form submission error:", error);

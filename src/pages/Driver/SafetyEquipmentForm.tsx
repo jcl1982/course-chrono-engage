@@ -1,3 +1,4 @@
+
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import HelmetSection from "@/components/driver/safety-equipment/HelmetSection";
 import SuitSection from "@/components/driver/safety-equipment/SuitSection";
-import CoPilotSection from "@/components/driver/safety-equipment/CoPilotSection";
 import FormActions from "@/components/driver/safety-equipment/FormActions";
 import { equipmentSchema, type EquipmentFormData } from "@/components/driver/safety-equipment/schemas/equipmentSchema";
 

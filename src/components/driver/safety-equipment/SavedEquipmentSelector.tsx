@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface SavedEquipment {
   id: string;
@@ -18,13 +18,16 @@ interface SavedEquipment {
 export const SavedEquipmentSelector = ({
   onSelectEquipment,
   onNewEquipment,
+  equipmentType = "driver"
 }: {
   onSelectEquipment: (equipment: SavedEquipment | null) => void;
   onNewEquipment: () => void;
+  equipmentType?: "driver" | "copilot";
 }) => {
   const [savedEquipment, setSavedEquipment] = useState<SavedEquipment[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSavedEquipment = async () => {
@@ -51,17 +54,17 @@ export const SavedEquipmentSelector = ({
     fetchSavedEquipment();
   }, [toast]);
 
-  const handleSelection = (value: string) => {
-    setSelectedId(value);
-    const selected = savedEquipment.find((eq) => eq.id === value) || null;
-    onSelectEquipment(selected);
+  const handleNewEquipment = () => {
+    const path = equipmentType === "driver" ? "/driver/equipment/new" : "/driver/equipment/copilot/new";
+    const returnUrl = window.location.pathname;
+    navigate(`${path}?returnUrl=${encodeURIComponent(returnUrl)}`);
   };
 
   if (savedEquipment.length === 0) {
     return (
       <div className="text-center py-6">
         <p className="text-gray-500 mb-4">Aucun équipement enregistré</p>
-        <Button onClick={onNewEquipment}>
+        <Button onClick={handleNewEquipment}>
           <Plus className="w-4 h-4 mr-2" />
           Ajouter un nouvel équipement
         </Button>
@@ -97,7 +100,7 @@ export const SavedEquipmentSelector = ({
       </RadioGroup>
 
       <div className="flex justify-center">
-        <Button variant="outline" onClick={onNewEquipment}>
+        <Button variant="outline" onClick={handleNewEquipment}>
           <Plus className="w-4 h-4 mr-2" />
           Ajouter un nouvel équipement
         </Button>

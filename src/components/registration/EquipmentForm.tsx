@@ -32,6 +32,14 @@ const equipmentSchema = z.object({
     brand: z.string().min(1, "La marque du harnais est requise"),
     homologation: z.string().min(1, "Le numéro d'homologation est requis"),
   }),
+  coPilote: z.object({
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    email: z.string().email("Format d'email invalide").optional().or(z.literal("")),
+    phone: z.string().optional(),
+    licenseNumber: z.string().optional(),
+    bloodType: z.string().optional(),
+  }),
 });
 
 type EquipmentFormData = z.infer<typeof equipmentSchema>;
@@ -45,6 +53,7 @@ const EquipmentForm = () => {
       arceau: false,
       sieges: { brand: "", homologation: "" },
       harnais: { brand: "", homologation: "" },
+      coPilote: { firstName: "", lastName: "", email: "", phone: "", licenseNumber: "", bloodType: "" },
     },
   });
 
@@ -202,6 +211,94 @@ const EquipmentForm = () => {
               />
             </div>
           </div>
+        </div>
+        
+        <div className="space-y-4">
+          <h4 className="font-medium">Informations du Co-Pilote</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="coPilote.firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Prénom</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Entrez le prénom du co-pilote" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="coPilote.lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nom</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Entrez le nom du co-pilote" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          
+          <FormField
+            control={form.control}
+            name="coPilote.email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input {...field} type="email" placeholder="Entrez l'email du co-pilote" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="coPilote.phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Téléphone</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Entrez le numéro de téléphone du co-pilote" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="coPilote.licenseNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Numéro de licence</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Entrez le numéro de licence du co-pilote" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="coPilote.bloodType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Groupe sanguin</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Entrez le groupe sanguin du co-pilote" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       </form>
     </Form>

@@ -5,6 +5,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import EquipmentActions from "./safety-equipment/EquipmentActions";
+import DeleteEquipmentDialog from "./safety-equipment/DeleteEquipmentDialog";
 
 interface SafetyEquipment {
   id: string;
@@ -20,6 +22,7 @@ interface SafetyEquipment {
 const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
   const [equipment, setEquipment] = useState<SafetyEquipment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [equipmentToDelete, setEquipmentToDelete] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -49,6 +52,34 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
     }
   };
 
+  const handleDelete = async () => {
+    if (!equipmentToDelete) return;
+
+    try {
+      const { error } = await supabase
+        .from('driver_safety_equipment')
+        .delete()
+        .eq('id', equipmentToDelete);
+
+      if (error) throw error;
+
+      toast({
+        title: "Succès",
+        description: "L'équipement a été supprimé",
+      });
+
+      setEquipment(equipment.filter(item => item.id !== equipmentToDelete));
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer l'équipement",
+        variant: "destructive",
+      });
+    } finally {
+      setEquipmentToDelete(null);
+    }
+  };
+
   const handleAddNew = () => {
     navigate('/driver/equipment/new');
   };
@@ -73,20 +104,26 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
       {equipment.map((item) => (
         <Card key={item.id} className="hover:bg-gray-50 transition-colors">
           <CardContent className="p-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h3 className="font-medium">Casque</h3>
-                <p className="text-sm text-gray-600">Marque: {item.helmet_brand}</p>
-                <p className="text-sm text-gray-600">Modèle: {item.helmet_model}</p>
-                <p className="text-sm text-gray-600">Homologation: {item.helmet_homologation}</p>
-                <p className="text-sm text-gray-600">Expiration: {new Date(item.helmet_expiry_date).toLocaleDateString()}</p>
+            <div className="flex justify-between items-start">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-medium">Casque</h3>
+                  <p className="text-sm text-gray-600">Marque: {item.helmet_brand}</p>
+                  <p className="text-sm text-gray-600">Modèle: {item.helmet_model}</p>
+                  <p className="text-sm text-gray-600">Homologation: {item.helmet_homologation}</p>
+                  <p className="text-sm text-gray-600">Expiration: {new Date(item.helmet_expiry_date).toLocaleDateString()}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium">Combinaison</h3>
+                  <p className="text-sm text-gray-600">Marque: {item.suit_brand}</p>
+                  <p className="text-sm text-gray-600">Homologation: {item.suit_homologation}</p>
+                  <p className="text-sm text-gray-600">Expiration: {new Date(item.suit_expiry_date).toLocaleDateString()}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-medium">Combinaison</h3>
-                <p className="text-sm text-gray-600">Marque: {item.suit_brand}</p>
-                <p className="text-sm text-gray-600">Homologation: {item.suit_homologation}</p>
-                <p className="text-sm text-gray-600">Expiration: {new Date(item.suit_expiry_date).toLocaleDateString()}</p>
-              </div>
+              <EquipmentActions
+                equipmentId={item.id}
+                onDeleteClick={() => setEquipmentToDelete(item.id)}
+              />
             </div>
           </CardContent>
         </Card>
@@ -97,6 +134,12 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
           Ajouter un nouvel équipement
         </Button>
       </div>
+
+      <DeleteEquipmentDialog
+        isOpen={!!equipmentToDelete}
+        onClose={() => setEquipmentToDelete(null)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };

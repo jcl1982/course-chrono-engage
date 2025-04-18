@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import HelmetSection from "@/components/driver/safety-equipment/HelmetSection";
 import SuitSection from "@/components/driver/safety-equipment/SuitSection";
+import UnderwearSection from "@/components/driver/safety-equipment/UnderwearSection";
+import ShoesSection from "@/components/driver/safety-equipment/ShoesSection";
+import GlovesSection from "@/components/driver/safety-equipment/GlovesSection";
+import HansSection from "@/components/driver/safety-equipment/HansSection";
 import FormActions from "@/components/driver/safety-equipment/FormActions";
 import { equipmentSchema, type EquipmentFormData } from "@/components/driver/safety-equipment/schemas/equipmentSchema";
 
@@ -24,6 +28,18 @@ const SafetyEquipmentForm = () => {
       suit_brand: "",
       suit_homologation: "",
       suit_expiry_date: "",
+      underwear_brand: "",
+      underwear_homologation: "",
+      underwear_expiry_date: "",
+      shoes_brand: "",
+      shoes_homologation: "",
+      shoes_expiry_date: "",
+      gloves_brand: "",
+      gloves_homologation: "",
+      gloves_expiry_date: "",
+      hans_brand: "",
+      hans_homologation: "",
+      hans_expiry_date: "",
     },
   });
 
@@ -32,13 +48,7 @@ const SafetyEquipmentForm = () => {
       const user = await supabase.auth.getUser();
       
       const equipmentData = {
-        helmet_brand: data.helmet_brand,
-        helmet_model: data.helmet_model,
-        helmet_homologation: data.helmet_homologation,
-        helmet_expiry_date: data.helmet_expiry_date,
-        suit_brand: data.suit_brand,
-        suit_homologation: data.suit_homologation,
-        suit_expiry_date: data.suit_expiry_date,
+        ...data,
         driver_id: user.data.user?.id,
       };
       
@@ -66,8 +76,18 @@ const SafetyEquipmentForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <HelmetSection />
-        <SuitSection />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <HelmetSection />
+            <UnderwearSection />
+            <GlovesSection />
+          </div>
+          <div className="space-y-6">
+            <SuitSection />
+            <ShoesSection />
+            <HansSection />
+          </div>
+        </div>
         <FormActions />
       </form>
     </Form>

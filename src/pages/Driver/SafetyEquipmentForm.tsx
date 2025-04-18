@@ -1,5 +1,4 @@
 
-import { useEffect } from "react";
 import { Form } from "@/components/ui/form";
 import HelmetSection from "@/components/driver/safety-equipment/HelmetSection";
 import SuitSection from "@/components/driver/safety-equipment/SuitSection";
@@ -22,11 +21,7 @@ interface SafetyEquipmentFormProps {
 }
 
 const SafetyEquipmentForm = ({ type }: SafetyEquipmentFormProps) => {
-  const { form, loading, submitting, onSubmit, fetchEquipment } = useSafetyEquipmentForm(type);
-
-  useEffect(() => {
-    fetchEquipment();
-  }, [fetchEquipment]);
+  const { form, loading, submitting, onSubmit } = useSafetyEquipmentForm(type);
 
   if (loading) {
     return <LoadingState />;

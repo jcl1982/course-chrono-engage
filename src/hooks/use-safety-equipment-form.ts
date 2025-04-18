@@ -177,6 +177,5 @@ export const useSafetyEquipmentForm = (type: EquipmentType) => {
     loading,
     submitting,
     onSubmit,
-    fetchEquipment,
   };
 };

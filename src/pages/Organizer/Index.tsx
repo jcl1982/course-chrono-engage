@@ -1,4 +1,5 @@
-import { Navigate, useNavigate } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { OrganizerGuard } from "@/components/auth/OrganizerGuard";
 import { 
@@ -9,11 +10,9 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { Trophy, Users, BarChart } from "lucide-react";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 const OrganizerSpace = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
   const menuItems = [
     {
       title: "Rallyes",
@@ -42,9 +41,12 @@ const OrganizerSpace = () => {
     <OrganizerGuard>
       <div className="min-h-screen bg-black text-white">
         <header className="bg-[#222222] shadow-sm border-b border-red-800">
-          <div className="container mx-auto py-4 px-4 md:px-6">
-            <h1 className="text-3xl font-bold text-red-500">Espace Organisateur</h1>
-            <p className="text-gray-300">Gestion des rallyes et épreuves</p>
+          <div className="container mx-auto py-4 px-4 md:px-6 flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-red-500">Espace Organisateur</h1>
+              <p className="text-gray-300">Gestion des rallyes et épreuves</p>
+            </div>
+            <LogoutButton />
           </div>
         </header>
 

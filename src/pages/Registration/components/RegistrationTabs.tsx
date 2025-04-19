@@ -1,9 +1,11 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfoForm from "@/components/registration/PersonalInfoForm";
 import VehicleSelector from "./VehicleSelector";
 import { SavedEquipmentSelector } from "@/components/driver/safety-equipment/SavedEquipmentSelector";
 import { z } from "zod";
 import { personalInfoSchema } from "@/components/registration/schemas/personalInfoSchema";
+import { EventType } from "../RegistrationForm";
 
 interface RegistrationTabsProps {
   selectedTab: string;
@@ -18,6 +20,7 @@ interface RegistrationTabsProps {
   selectedDriverEquipment: any;
   selectedCopilotEquipment: any;
   onPersonalInfoSubmit: (data: z.infer<typeof personalInfoSchema>) => void;
+  eventType: EventType;
 }
 
 export const RegistrationTabs = ({
@@ -33,6 +36,7 @@ export const RegistrationTabs = ({
   selectedDriverEquipment,
   selectedCopilotEquipment,
   onPersonalInfoSubmit,
+  eventType,
 }: RegistrationTabsProps) => {
   return (
     <Tabs value={selectedTab} onValueChange={onTabChange} className="w-full">
@@ -73,7 +77,8 @@ export const RegistrationTabs = ({
             />
           </div>
 
-          {selectedDriverEquipment && (
+          {/* Only show co-pilot equipment for rally events */}
+          {eventType === "rally" && selectedDriverEquipment && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold mb-4">Équipement du Copilote</h3>
               <SavedEquipmentSelector

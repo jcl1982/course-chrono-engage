@@ -147,7 +147,9 @@ const VehicleList = ({ userId }: { userId?: string }) => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogCancel className="border-red-500 text-red-500 hover:bg-red-950">
+              Annuler
+            </AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600">
               Supprimer
             </AlertDialogAction>

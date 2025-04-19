@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { EventType } from "@/pages/Registration/RegistrationForm";
 import { useParams } from "react-router-dom";
@@ -5,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { personalInfoSchema } from "@/components/registration/schemas/personalInfoSchema";
+import { useNavigate } from "react-router-dom";
 
 export const useRegistration = () => {
   const [eventType, setEventType] = useState<EventType>("rally");
@@ -16,9 +18,11 @@ export const useRegistration = () => {
   const [selectedDriverEquipment, setSelectedDriverEquipment] = useState<any>(null);
   const [selectedCopilotEquipment, setSelectedCopilotEquipment] = useState<any>(null);
   const [formData, setFormData] = useState<z.infer<typeof personalInfoSchema> | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const { rallyId } = useParams();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserAndRally = async () => {
@@ -58,8 +62,14 @@ export const useRegistration = () => {
   const handleNext = () => {
     if (selectedTab === "personal" && formData) {
       setSelectedTab("vehicle");
-    } else if (selectedTab === "vehicle") {
+    } else if (selectedTab === "vehicle" && selectedVehicle) {
       setSelectedTab("equipment");
+    } else {
+      toast({
+        title: "Information requise",
+        description: "Veuillez compléter cette étape avant de continuer",
+        variant: "destructive",
+      });
     }
   };
 
@@ -76,26 +86,81 @@ export const useRegistration = () => {
     handleNext();
   };
 
-  const handleSubmit = async () => {
-    if (!currentUserId || !rallyId || !selectedVehicle || !formData) {
+  const validateSubmission = () => {
+    if (!currentUserId) {
       toast({
-        title: "Informations manquantes",
-        description: "Veuillez remplir toutes les informations requises",
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour vous inscrire",
         variant: "destructive",
       });
+      return false;
+    }
+    
+    if (!rallyId) {
+      toast({
+        title: "Rallye non spécifié",
+        description: "Aucun rallye sélectionné pour l'inscription",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    if (!selectedVehicle) {
+      toast({
+        title: "Véhicule requis",
+        description: "Veuillez sélectionner un véhicule",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    if (!formData) {
+      toast({
+        title: "Informations personnelles requises",
+        description: "Veuillez compléter les informations personnelles",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    if (!selectedDriverEquipment) {
+      toast({
+        title: "Équipement pilote requis",
+        description: "Veuillez sélectionner l'équipement du pilote",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    if (submitting) return;
+    
+    if (!validateSubmission()) {
       return;
     }
 
     try {
-      const { error } = await supabase
+      setSubmitting(true);
+      
+      // Prepare the registration data
+      const registrationData = {
+        driver_id: currentUserId,
+        rally_id: rallyId,
+        vehicle_id: selectedVehicle,
+        driver_info: formData,
+        driver_equipment_id: selectedDriverEquipment?.id,
+        co_driver_equipment_id: selectedCopilotEquipment?.id || null,
+        status: 'pending'
+      };
+      
+      // Insert registration
+      const { error, data } = await supabase
         .from('registrations')
-        .insert([{
-          driver_id: currentUserId,
-          rally_id: rallyId,
-          vehicle_id: selectedVehicle,
-          driver_info: formData,
-          status: 'pending'
-        }]);
+        .insert([registrationData])
+        .select();
 
       if (error) throw error;
 
@@ -103,6 +168,9 @@ export const useRegistration = () => {
         title: "Inscription réussie",
         description: "Votre inscription au rallye a été enregistrée"
       });
+      
+      // Navigate to driver dashboard
+      navigate("/driver");
     } catch (error) {
       console.error("Error registering for rally:", error);
       toast({
@@ -110,6 +178,8 @@ export const useRegistration = () => {
         description: "Une erreur est survenue lors de l'inscription",
         variant: "destructive",
       });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -131,6 +201,7 @@ export const useRegistration = () => {
     showNewEquipmentForm,
     selectedDriverEquipment,
     selectedCopilotEquipment,
+    submitting,
     handleTabChange,
     handleNext,
     handlePrevious,

@@ -17,6 +17,7 @@ const RegistrationForm = () => {
     showNewEquipmentForm,
     selectedDriverEquipment,
     selectedCopilotEquipment,
+    submitting,
     handleTabChange,
     handleNext,
     handlePrevious,
@@ -56,6 +57,7 @@ const RegistrationForm = () => {
             onPrevious={handlePrevious}
             onNext={handleNext}
             onSubmit={handleSubmit}
+            submitting={submitting}
           />
         </CardContent>
       </Card>

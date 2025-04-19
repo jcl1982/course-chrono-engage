@@ -9,6 +9,7 @@ import { FormSelect } from "@/components/form/FormSelect";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { type Database } from "@/integrations/supabase/types";
+import { useEffect } from "react";
 
 type Competition = Database["public"]["Tables"]["competitions"]["Insert"];
 
@@ -41,9 +42,40 @@ export const CompetitionFormDialog = ({
     },
   });
 
+  // Reset form when dialog opens/closes or competition changes
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        name: competition?.name || "",
+        date: competition?.date || "",
+        location: competition?.location || "",
+        description: competition?.description || "",
+        status: competition?.status || "DRAFT",
+        registration_deadline: competition?.registration_deadline || "",
+        max_participants: competition?.max_participants || 0,
+        registration_open: competition?.registration_open || false,
+        type: type,
+      });
+    }
+  }, [open, competition, form, type]);
+
   const onSubmit = async (data: Competition) => {
     try {
+      // Récupérer l'ID de l'utilisateur connecté
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData.session?.user.id;
+      
+      if (!userId) {
+        toast({
+          title: "Erreur",
+          description: "Vous devez être connecté pour créer une compétition",
+          variant: "destructive",
+        });
+        return;
+      }
+
       if (competition?.id) {
+        // Mise à jour d'une compétition existante
         const { error } = await supabase
           .from("competitions")
           .update(data)
@@ -52,9 +84,10 @@ export const CompetitionFormDialog = ({
         if (error) throw error;
         toast({ title: "La compétition a été modifiée avec succès" });
       } else {
+        // Création d'une nouvelle compétition
         const { error } = await supabase
           .from("competitions")
-          .insert([{ ...data, type }]);
+          .insert([{ ...data, type, created_by: userId }]);
 
         if (error) throw error;
         toast({ title: "La compétition a été créée avec succès" });
@@ -146,3 +179,4 @@ export const CompetitionFormDialog = ({
     </Dialog>
   );
 };
+

@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import EquipmentActions from "./safety-equipment/EquipmentActions";
 import DeleteEquipmentDialog from "./safety-equipment/DeleteEquipmentDialog";
 
@@ -17,6 +18,7 @@ interface SafetyEquipment {
   suit_brand: string;
   suit_homologation: string;
   suit_expiry_date: string;
+  copilot_helmet_brand?: string;
 }
 
 const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
@@ -120,14 +122,24 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
             <div className="flex justify-between items-start">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h3 className="font-medium">Casque</h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-medium">Casque</h3>
+                    <Badge variant={item.copilot_helmet_brand ? "secondary" : "default"} className="text-xs">
+                      {item.copilot_helmet_brand ? "Copilote" : "Pilote"}
+                    </Badge>
+                  </div>
                   <p className="text-sm text-gray-600">Marque: {item.helmet_brand}</p>
                   <p className="text-sm text-gray-600">Modèle: {item.helmet_model}</p>
                   <p className="text-sm text-gray-600">Homologation: {item.helmet_homologation}</p>
                   <p className="text-sm text-gray-600">Expiration: {new Date(item.helmet_expiry_date).toLocaleDateString()}</p>
                 </div>
                 <div>
-                  <h3 className="font-medium">Combinaison</h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-medium">Combinaison</h3>
+                    <Badge variant={item.copilot_helmet_brand ? "secondary" : "default"} className="text-xs">
+                      {item.copilot_helmet_brand ? "Copilote" : "Pilote"}
+                    </Badge>
+                  </div>
                   <p className="text-sm text-gray-600">Marque: {item.suit_brand}</p>
                   <p className="text-sm text-gray-600">Homologation: {item.suit_homologation}</p>
                   <p className="text-sm text-gray-600">Expiration: {new Date(item.suit_expiry_date).toLocaleDateString()}</p>
@@ -135,7 +147,7 @@ const SafetyEquipmentList = ({ userId }: { userId?: string }) => {
               </div>
               <EquipmentActions
                 equipmentId={item.id}
-                type="driver"
+                type={item.copilot_helmet_brand ? "copilot" : "driver"}
                 onDeleteClick={() => setEquipmentToDelete(item.id)}
               />
             </div>

@@ -42,13 +42,15 @@ const RallyList = ({ userId }: RallyListProps) => {
       if (compError) throw compError;
 
       // Properly format rallies with type property
-      const formattedRallies = rallies ? rallies.map(rally => ({
+      const formattedRallies: Event[] = rallies ? rallies.map(rally => ({
         ...rally,
         type: 'rally' as const
       })) : [];
 
       // Combine both arrays ensuring they're not null
-      return [...formattedRallies, ...(competitions || [])];
+      const formattedCompetitions: Event[] = competitions || [];
+      
+      return [...formattedRallies, ...formattedCompetitions];
     }
   });
 

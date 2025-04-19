@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { EventType } from "@/pages/Registration/RegistrationForm";
 import { useParams } from "react-router-dom";
@@ -13,7 +12,9 @@ export const useRegistration = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const [selectedEquipment, setSelectedEquipment] = useState<string | null>(null);
   const [showNewEquipmentForm, setShowNewEquipmentForm] = useState(false);
-  
+  const [selectedDriverEquipment, setSelectedDriverEquipment] = useState<any>(null);
+  const [selectedCopilotEquipment, setSelectedCopilotEquipment] = useState<any>(null);
+
   const { rallyId } = useParams();
   const { toast } = useToast();
 
@@ -104,6 +105,14 @@ export const useRegistration = () => {
     }
   };
 
+  const handleSelectEquipment = (equipment: any, role: "driver" | "copilot") => {
+    if (role === "driver") {
+      setSelectedDriverEquipment(equipment);
+    } else {
+      setSelectedCopilotEquipment(equipment);
+    }
+  };
+
   return {
     eventType,
     selectedTab,
@@ -119,5 +128,8 @@ export const useRegistration = () => {
     setSelectedVehicle,
     setSelectedEquipment,
     setShowNewEquipmentForm,
+    selectedDriverEquipment,
+    selectedCopilotEquipment,
+    handleSelectEquipment,
   };
 };

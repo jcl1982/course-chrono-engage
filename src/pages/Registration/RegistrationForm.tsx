@@ -13,12 +13,14 @@ const RegistrationForm = () => {
     currentUserId,
     selectedVehicle,
     showNewEquipmentForm,
+    selectedDriverEquipment,
+    selectedCopilotEquipment,
     handleTabChange,
     handleNext,
     handlePrevious,
     handleSubmit,
     setSelectedVehicle,
-    setSelectedEquipment,
+    handleSelectEquipment,
     setShowNewEquipmentForm,
   } = useRegistration();
 
@@ -39,7 +41,9 @@ const RegistrationForm = () => {
             onSelectVehicle={setSelectedVehicle}
             showNewEquipmentForm={showNewEquipmentForm}
             onNewEquipment={() => setShowNewEquipmentForm(true)}
-            onSelectEquipment={setSelectedEquipment}
+            onSelectEquipment={handleSelectEquipment}
+            selectedDriverEquipment={selectedDriverEquipment}
+            selectedCopilotEquipment={selectedCopilotEquipment}
           />
           
           <NavigationButtons
@@ -53,5 +57,3 @@ const RegistrationForm = () => {
     </div>
   );
 };
-
-export default RegistrationForm;

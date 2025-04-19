@@ -3,7 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfoForm from "@/components/registration/PersonalInfoForm";
 import VehicleSelector from "./VehicleSelector";
 import { SavedEquipmentSelector } from "@/components/driver/safety-equipment/SavedEquipmentSelector";
-import EquipmentForm from "@/components/registration/EquipmentForm";
 
 interface RegistrationTabsProps {
   selectedTab: string;
@@ -13,7 +12,9 @@ interface RegistrationTabsProps {
   onSelectVehicle: (vehicleId: string) => void;
   showNewEquipmentForm: boolean;
   onNewEquipment: () => void;
-  onSelectEquipment: (equipment: any) => void;
+  onSelectEquipment: (equipment: any, role: "driver" | "copilot") => void;
+  selectedDriverEquipment: any;
+  selectedCopilotEquipment: any;
 }
 
 export const RegistrationTabs = ({
@@ -25,6 +26,8 @@ export const RegistrationTabs = ({
   showNewEquipmentForm,
   onNewEquipment,
   onSelectEquipment,
+  selectedDriverEquipment,
+  selectedCopilotEquipment,
 }: RegistrationTabsProps) => {
   return (
     <Tabs value={selectedTab} onValueChange={onTabChange} className="w-full">
@@ -55,15 +58,25 @@ export const RegistrationTabs = ({
       </TabsContent>
 
       <TabsContent value="equipment">
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold mb-4">Équipements de Sécurité</h3>
-          {!showNewEquipmentForm ? (
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold mb-4">Équipement du Pilote</h3>
             <SavedEquipmentSelector
-              onSelectEquipment={onSelectEquipment}
+              onSelectEquipment={(equipment) => onSelectEquipment(equipment, "driver")}
               onNewEquipment={onNewEquipment}
+              equipmentType="driver"
             />
-          ) : (
-            <EquipmentForm />
+          </div>
+
+          {selectedDriverEquipment && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold mb-4">Équipement du Copilote</h3>
+              <SavedEquipmentSelector
+                onSelectEquipment={(equipment) => onSelectEquipment(equipment, "copilot")}
+                onNewEquipment={onNewEquipment}
+                equipmentType="copilot"
+              />
+            </div>
           )}
         </div>
       </TabsContent>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -114,9 +113,7 @@ export const useRegistrationSubmit = () => {
       if (eventType === "rally") {
         registrationData.rally_id = eventId || eventDetails?.id;
       } else if (eventType === "hillclimb" || eventType === "slalom") {
-        // For hillclimb or slalom, we still need to provide a valid rally_id
-        // but we'll store the competition ID in a separate field for later reference
-        registrationData.rally_id = null; // This might need to be a valid placeholder or default value
+        // For hillclimb or slalom, rally_id remains null and we set competition_id
         registrationData.competition_id = eventId || eventDetails?.id;
         registrationData.event_type = eventType;
       }
@@ -125,8 +122,7 @@ export const useRegistrationSubmit = () => {
       
       const { error } = await supabase
         .from('registrations')
-        .insert([registrationData])
-        .select();
+        .insert(registrationData);
 
       if (error) {
         console.error("Erreur détaillée:", error);

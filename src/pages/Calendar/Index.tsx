@@ -7,24 +7,99 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { BackButton } from "@/components/navigation/BackButton";
+import { Mountain, Trophy, Flag } from "lucide-react";
+
+interface Event {
+  id: string;
+  name: string;
+  type: 'rally' | 'hillclimb' | 'slalom';
+  date: string;
+  location: string;
+  status: string;
+}
 
 const CalendarPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
-  const { data: rallies, isLoading } = useQuery({
-    queryKey: ["rallies"],
+  const { data: events = [], isLoading } = useQuery({
+    queryKey: ["upcoming-events"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('rallies')
-        .select('*')
-        .order('start_date', { ascending: true });
+      try {
+        const today = new Date().toISOString().split('T')[0];
 
-      if (error) throw error;
-      return data;
+        // Fetch rallies
+        const { data: rallies, error: rallyError } = await supabase
+          .from('rallies')
+          .select('id, name, start_date, location, status')
+          .gte('start_date', today)
+          .order('start_date');
+
+        if (rallyError) throw rallyError;
+
+        // Fetch competitions
+        const { data: competitions, error: compError } = await supabase
+          .from('competitions')
+          .select('id, name, type, date, location, status')
+          .gte('date', today)
+          .order('date');
+
+        if (compError) throw compError;
+
+        // Format rallies
+        const formattedRallies = (rallies || []).map((rally: any) => ({
+          id: rally.id,
+          name: rally.name,
+          date: rally.start_date,
+          location: rally.location,
+          status: rally.status,
+          type: 'rally' as const
+        }));
+
+        // Format competitions
+        const formattedCompetitions = (competitions || []).map((comp: any) => ({
+          id: comp.id,
+          name: comp.name,
+          date: comp.date,
+          location: comp.location,
+          status: comp.status,
+          type: (comp.type === 'hillclimb' || comp.type === 'slalom') 
+            ? comp.type as 'hillclimb' | 'slalom'
+            : 'hillclimb' as const
+        }));
+
+        return [...formattedRallies, ...formattedCompetitions];
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        return [];
+      }
     },
   });
 
-  const upcomingRallies = rallies?.filter(rally => new Date(rally.start_date) >= new Date()) || [];
+  const getEventIcon = (type: string) => {
+    switch (type) {
+      case 'rally':
+        return <Trophy className="h-4 w-4 text-red-500" />;
+      case 'hillclimb':
+        return <Mountain className="h-4 w-4 text-red-500" />;
+      case 'slalom':
+        return <Flag className="h-4 w-4 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const getEventType = (type: string) => {
+    switch (type) {
+      case 'rally':
+        return 'Rallye';
+      case 'hillclimb':
+        return 'Course de côte';
+      case 'slalom':
+        return 'Slalom';
+      default:
+        return type;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -32,7 +107,7 @@ const CalendarPage = () => {
         <div className="container mx-auto py-4 px-4 md:px-6">
           <div className="flex items-center gap-4 mb-2">
             <BackButton />
-            <h1 className="text-3xl font-bold text-red-500">Calendrier des Rallyes</h1>
+            <h1 className="text-3xl font-bold text-red-500">Calendrier des Épreuves</h1>
           </div>
           <p className="text-gray-300">Consultez les dates des prochains événements</p>
         </div>
@@ -49,7 +124,7 @@ const CalendarPage = () => {
                 mode="single"
                 selected={date}
                 onSelect={setDate}
-                className="text-white rounded-md border border-red-900"
+                className="text-white rounded-md border border-red-900 pointer-events-auto"
                 locale={fr}
               />
             </CardContent>
@@ -57,37 +132,36 @@ const CalendarPage = () => {
 
           <Card className="bg-[#1a1a1a] border-red-900 text-white">
             <CardHeader>
-              <CardTitle className="text-red-500">Prochains Rallyes</CardTitle>
+              <CardTitle className="text-red-500">Prochains Événements</CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <p className="text-gray-400">Chargement des rallyes...</p>
-              ) : upcomingRallies.length > 0 ? (
+                <p className="text-gray-400">Chargement des événements...</p>
+              ) : events.length > 0 ? (
                 <div className="space-y-4">
-                  {upcomingRallies.map((rally) => (
+                  {events.map((event) => (
                     <div 
-                      key={rally.id}
+                      key={event.id}
                       className="p-4 rounded-lg bg-[#2a2a2a] border border-red-900/50 hover:bg-[#333333] transition-colors"
                     >
-                      <h3 className="font-medium text-red-400">{rally.name}</h3>
-                      <p className="text-sm text-gray-400">
-                        Date: {format(new Date(rally.start_date), 'PPP', { locale: fr })}
+                      <div className="flex items-center gap-2">
+                        {getEventIcon(event.type)}
+                        <h3 className="font-medium text-red-400">{event.name}</h3>
+                      </div>
+                      <p className="text-sm text-gray-400 mt-1">
+                        Type: {getEventType(event.type)}
                       </p>
                       <p className="text-sm text-gray-400">
-                        Lieu: {rally.location}
+                        Date: {format(new Date(event.date), 'PPP', { locale: fr })}
                       </p>
-                      <span className={`inline-block mt-2 text-xs px-2 py-1 rounded-full ${
-                        rally.registration_open 
-                          ? 'bg-green-900/50 text-green-400' 
-                          : 'bg-red-900/50 text-red-400'
-                      }`}>
-                        {rally.registration_open ? 'Inscriptions ouvertes' : 'Inscriptions fermées'}
-                      </span>
+                      <p className="text-sm text-gray-400">
+                        Lieu: {event.location}
+                      </p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-400">Aucun rallye à venir</p>
+                <p className="text-gray-400">Aucun événement à venir</p>
               )}
             </CardContent>
           </Card>

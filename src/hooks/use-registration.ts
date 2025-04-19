@@ -57,13 +57,32 @@ export const useRegistration = () => {
           });
           navigate("/");
         }
-      } else {
-        console.log("No rally ID provided");
       }
     };
 
     fetchUserAndRally();
   }, [rallyId, toast, navigate]);
+
+  const setSelectedRally = async (id: string) => {
+    const { data, error } = await supabase
+      .from('rallies')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les informations du rallye",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (data) {
+      setRallyDetails(data);
+    }
+  };
 
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
@@ -218,5 +237,6 @@ export const useRegistration = () => {
     setSelectedVehicle,
     handleSelectEquipment,
     setShowNewEquipmentForm,
+    setSelectedRally,
   };
 };

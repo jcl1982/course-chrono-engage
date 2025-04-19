@@ -1,27 +1,27 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatDate } from "@/lib/utils";
-import { CompetitionStatus } from "@/types/competition";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PencilIcon, TrashIcon } from "lucide-react";
+import { type Database } from "@/integrations/supabase/types";
 
-interface Competition {
-  id: string;
-  name: string;
-  date: string;
-  location: string;
-  status: CompetitionStatus;
-}
+type Competition = Database["public"]["Tables"]["competitions"]["Row"];
 
 interface CompetitionTableProps {
   competitions: Competition[];
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onEdit: (competition: Competition) => void;
+  onDelete: (competition: Competition) => void;
+  isLoading?: boolean;
 }
 
-export const CompetitionTable = ({ competitions, onEdit, onDelete }: CompetitionTableProps) => {
-  const getStatusColor = (status: CompetitionStatus) => {
+export const CompetitionTable = ({ 
+  competitions, 
+  onEdit, 
+  onDelete,
+  isLoading 
+}: CompetitionTableProps) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "DRAFT":
         return "bg-yellow-500/20 text-yellow-500 hover:bg-yellow-500/30";
@@ -35,6 +35,10 @@ export const CompetitionTable = ({ competitions, onEdit, onDelete }: Competition
         return "bg-gray-500/20 text-gray-500 hover:bg-gray-500/30";
     }
   };
+
+  if (isLoading) {
+    return <p className="text-gray-400">Chargement des compétitions...</p>;
+  }
 
   return (
     <div className="rounded-md border border-red-900">
@@ -63,7 +67,7 @@ export const CompetitionTable = ({ competitions, onEdit, onDelete }: Competition
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  onClick={() => onEdit(competition.id)}
+                  onClick={() => onEdit(competition)}
                   className="hover:bg-red-950"
                 >
                   <PencilIcon className="h-4 w-4 text-red-500" />
@@ -71,7 +75,7 @@ export const CompetitionTable = ({ competitions, onEdit, onDelete }: Competition
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  onClick={() => onDelete(competition.id)}
+                  onClick={() => onDelete(competition)}
                   className="hover:bg-red-950"
                 >
                   <TrashIcon className="h-4 w-4 text-red-500" />

@@ -6,52 +6,67 @@ import { OrganizerGuard } from "@/components/auth/OrganizerGuard";
 import { BackButton } from "@/components/navigation/BackButton";
 import { CompetitionTable } from "@/components/competition/CompetitionTable";
 import { DeleteCompetitionDialog } from "@/components/competition/DeleteCompetitionDialog";
+import { CompetitionFormDialog } from "@/components/competition/CompetitionFormDialog";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { type Database } from "@/integrations/supabase/types";
+
+type Competition = Database["public"]["Tables"]["competitions"]["Row"];
 
 const HillclimbManager = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedCompetition, setSelectedCompetition] = useState<string | null>(null);
+  const [selectedCompetition, setSelectedCompetition] = useState<Competition | undefined>();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Exemple de données pour la démo
-  const competitions = [
-    {
-      id: "1",
-      name: "Course de Côte de Matouba",
-      date: "2024-06-15",
-      location: "Saint-Claude",
-      status: "PUBLISHED" as const,
-    },
-    {
-      id: "2",
-      name: "Course de Côte de Lebouchu",
-      date: "2024-07-20",
-      location: "Pointe-Noire",
-      status: "DRAFT" as const,
-    },
-  ];
+  const { data: competitions, isLoading } = useQuery({
+    queryKey: ["competitions", "hillclimb"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("competitions")
+        .select("*")
+        .eq("type", "hillclimb")
+        .order("date", { ascending: true });
 
-  const handleEdit = (id: string) => {
-    // À implémenter avec le formulaire d'édition
-    toast({
-      title: "Modification",
-      description: "Fonctionnalité en cours de développement",
-    });
+      if (error) throw error;
+      return data as Competition[];
+    },
+  });
+
+  const handleEdit = (competition: Competition) => {
+    setSelectedCompetition(competition);
+    setIsFormOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    setSelectedCompetition(id);
+  const handleDelete = (competition: Competition) => {
+    setSelectedCompetition(competition);
     setDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
-    // À implémenter avec la suppression en base de données
-    toast({
-      title: "Suppression",
-      description: "La course de côte a été supprimée avec succès",
-    });
-    setDeleteDialogOpen(false);
+  const confirmDelete = async () => {
+    if (!selectedCompetition) return;
+
+    try {
+      const { error } = await supabase
+        .from("competitions")
+        .delete()
+        .eq("id", selectedCompetition.id);
+
+      if (error) throw error;
+
+      await queryClient.invalidateQueries({ queryKey: ["competitions", "hillclimb"] });
+      toast({ title: "La course de côte a été supprimée avec succès" });
+      setDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting competition:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -61,11 +76,18 @@ const HillclimbManager = () => {
           <div className="flex items-center gap-4 mb-2">
             <BackButton />
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-red-500">Gestion des Courses de Côte</h1>
-              <p className="text-gray-400">Gérez vos courses de côte et les inscriptions</p>
+              <h1 className="text-3xl font-bold text-red-500">
+                Gestion des Courses de Côte
+              </h1>
+              <p className="text-gray-400">
+                Gérez vos courses de côte et les inscriptions
+              </p>
             </div>
-            <Button 
-              onClick={() => setIsFormOpen(true)}
+            <Button
+              onClick={() => {
+                setSelectedCompetition(undefined);
+                setIsFormOpen(true);
+              }}
               className="bg-red-500 hover:bg-red-600"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -74,17 +96,25 @@ const HillclimbManager = () => {
           </div>
         </div>
 
-        <CompetitionTable 
-          competitions={competitions}
+        <CompetitionTable
+          competitions={competitions || []}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          isLoading={isLoading}
         />
 
-        <DeleteCompetitionDialog 
+        <CompetitionFormDialog
+          open={isFormOpen}
+          onOpenChange={setIsFormOpen}
+          competition={selectedCompetition}
+          type="hillclimb"
+        />
+
+        <DeleteCompetitionDialog
           open={deleteDialogOpen}
           onOpenChange={setDeleteDialogOpen}
           onConfirm={confirmDelete}
-          competitionName={competitions.find(c => c.id === selectedCompetition)?.name}
+          competitionName={selectedCompetition?.name}
         />
       </div>
     </OrganizerGuard>

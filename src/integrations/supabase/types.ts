@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      competitions: {
+        Row: {
+          created_at: string
+          created_by: string
+          date: string
+          description: string | null
+          id: string
+          location: string
+          max_participants: number | null
+          name: string
+          registration_deadline: string | null
+          registration_open: boolean | null
+          status: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          date: string
+          description?: string | null
+          id?: string
+          location: string
+          max_participants?: number | null
+          name: string
+          registration_deadline?: string | null
+          registration_open?: boolean | null
+          status?: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          date?: string
+          description?: string | null
+          id?: string
+          location?: string
+          max_participants?: number | null
+          name?: string
+          registration_deadline?: string | null
+          registration_open?: boolean | null
+          status?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       copilot_registrations: {
         Row: {
           address: string

@@ -8,6 +8,7 @@ export type EventType = "rally" | "hillclimb" | "slalom";
 
 const RegistrationForm = () => {
   const {
+    eventType,
     selectedTab,
     rallyDetails,
     currentUserId,
@@ -57,3 +58,5 @@ const RegistrationForm = () => {
     </div>
   );
 };
+
+export default RegistrationForm;

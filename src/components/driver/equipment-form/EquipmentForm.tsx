@@ -5,6 +5,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import HelmetSection from "./sections/HelmetSection";
 import SuitSection from "./sections/SuitSection";
 import UnderwearSection from "./sections/UnderwearSection";

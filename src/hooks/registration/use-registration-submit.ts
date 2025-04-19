@@ -79,7 +79,7 @@ export const useRegistrationSubmit = () => {
       return false;
     }
     
-    // Pour les rallyes, vérifier l'équipement du copilote
+    // Vérifier les informations du copilote uniquement pour les rallyes
     if (eventType === "rally" && !formData.coPilote) {
       toast({
         title: "Informations copilote requises",

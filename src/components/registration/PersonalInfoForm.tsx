@@ -8,18 +8,11 @@ import { CoPilotInfo } from "./components/CoPilotInfo";
 import { DriverRegistrationForm } from "./driver/DriverRegistrationForm";
 import { CopilotRegistrationForm } from "./copilot/CopilotRegistrationForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { z } from "zod";
 
-interface PersonalInfoFormProps {
-  defaultValues?: z.infer<typeof personalInfoSchema> | null;
-  onSubmit: (data: z.infer<typeof personalInfoSchema>) => void;
-}
-
-const PersonalInfoForm = ({ defaultValues, onSubmit }: PersonalInfoFormProps) => {
+const PersonalInfoForm = () => {
   const form = useForm<PersonalInfoFormData>({
     resolver: zodResolver(personalInfoSchema),
-    defaultValues: defaultValues || {
+    defaultValues: {
       firstName: "",
       lastName: "",
       licenseNumber: "",
@@ -35,33 +28,21 @@ const PersonalInfoForm = ({ defaultValues, onSubmit }: PersonalInfoFormProps) =>
     },
   });
 
-  const handleSubmit = form.handleSubmit((data) => {
-    onSubmit(data);
-  });
-
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <Tabs defaultValue="driver" className="w-full space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="driver">Pilote</TabsTrigger>
-            <TabsTrigger value="copilot">Co-Pilote</TabsTrigger>
-          </TabsList>
+    <Tabs defaultValue="driver" className="w-full space-y-6">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="driver">Pilote</TabsTrigger>
+        <TabsTrigger value="copilot">Co-Pilote</TabsTrigger>
+      </TabsList>
 
-          <TabsContent value="driver">
-            <DriverInfo />
-          </TabsContent>
+      <TabsContent value="driver">
+        <DriverRegistrationForm />
+      </TabsContent>
 
-          <TabsContent value="copilot">
-            <CoPilotInfo />
-          </TabsContent>
-        </Tabs>
-
-        <div className="flex justify-end">
-          <Button type="submit">Sauvegarder</Button>
-        </div>
-      </form>
-    </Form>
+      <TabsContent value="copilot">
+        <CopilotRegistrationForm />
+      </TabsContent>
+    </Tabs>
   );
 };
 

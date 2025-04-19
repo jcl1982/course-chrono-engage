@@ -124,7 +124,11 @@ const Index = () => {
               </p>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="border-red-700 text-red-500 hover:bg-red-900/20">Voir les résultats</Button>
+              <Link to="/results">
+                <Button variant="outline" className="border-red-700 text-red-500 hover:bg-red-900/20">
+                  Voir les résultats
+                </Button>
+              </Link>
             </CardFooter>
           </Card>
         </div>

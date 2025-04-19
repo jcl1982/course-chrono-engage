@@ -470,6 +470,68 @@ export type Database = {
         }
         Relationships: []
       }
+      rally_results: {
+        Row: {
+          created_at: string
+          driver_id: string
+          id: string
+          position: number
+          rally_id: string
+          stage_id: string
+          time_seconds: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          driver_id: string
+          id?: string
+          position: number
+          rally_id: string
+          stage_id: string
+          time_seconds: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          driver_id?: string
+          id?: string
+          position?: number
+          rally_id?: string
+          stage_id?: string
+          time_seconds?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rally_results_rally_id_fkey"
+            columns: ["rally_id"]
+            isOneToOne: false
+            referencedRelation: "rallies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rally_results_rally_id_fkey"
+            columns: ["rally_id"]
+            isOneToOne: false
+            referencedRelation: "upcoming_rallies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rally_results_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "rally_stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rally_results_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "rally_stages_complete"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rally_stages: {
         Row: {
           created_at: string
@@ -840,6 +902,53 @@ export type Database = {
       }
     }
     Views: {
+      rally_results_complete: {
+        Row: {
+          created_at: string | null
+          driver_first_name: string | null
+          driver_id: string | null
+          driver_last_name: string | null
+          id: string | null
+          position: number | null
+          rally_date: string | null
+          rally_id: string | null
+          rally_name: string | null
+          stage_id: string | null
+          stage_name: string | null
+          time_seconds: number | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rally_results_rally_id_fkey"
+            columns: ["rally_id"]
+            isOneToOne: false
+            referencedRelation: "rallies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rally_results_rally_id_fkey"
+            columns: ["rally_id"]
+            isOneToOne: false
+            referencedRelation: "upcoming_rallies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rally_results_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "rally_stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rally_results_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "rally_stages_complete"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rally_stages_complete: {
         Row: {
           created_at: string | null

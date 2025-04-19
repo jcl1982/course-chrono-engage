@@ -15,6 +15,7 @@ import Statistics from "./pages/Organizer/Statistics";
 import Auth from "./pages/Auth";
 import SafetyEquipmentForm from "./pages/Driver/SafetyEquipmentForm";
 import CalendarPage from "./pages/Calendar/Index";
+import ResultsPage from "./pages/Results/Index";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/results" element={<ResultsPage />} />
           <Route path="/registration" element={<RegistrationForm />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/organizer" element={<OrganizerSpace />} />

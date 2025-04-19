@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -22,7 +23,7 @@ export const ParticipantDetailsDialog = ({
 }: ParticipantDetailsDialogProps) => {
   const { toast } = useToast();
 
-  const { data: participant, isLoading } = useQuery({
+  const { data: participant, isLoading: isLoadingParticipant } = useQuery({
     queryKey: ["participant", participantId],
     queryFn: async () => {
       if (!participantId) return null;
@@ -56,6 +57,33 @@ export const ParticipantDetailsDialog = ({
     enabled: !!participantId,
   });
 
+  const { data: equipmentData, isLoading: isLoadingEquipment } = useQuery({
+    queryKey: ["equipment", participantId],
+    queryFn: async () => {
+      if (!participantId) return null;
+      
+      const { data, error } = await supabase
+        .from("driver_safety_equipment")
+        .select(`*`)
+        .eq("driver_id", participantId)
+        .maybeSingle();
+
+      if (error) {
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger les données d'équipement",
+          variant: "destructive",
+        });
+        throw error;
+      }
+
+      return data;
+    },
+    enabled: !!participantId,
+  });
+
+  const isLoading = isLoadingParticipant || isLoadingEquipment;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
@@ -73,7 +101,7 @@ export const ParticipantDetailsDialog = ({
               type="registration" 
             />
           </div>
-          {isLoading ? (
+          {isLoadingParticipant ? (
             <div className="text-gray-400">Chargement des détails...</div>
           ) : participant ? (
             <div className="space-y-4">
@@ -101,10 +129,31 @@ export const ParticipantDetailsDialog = ({
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Équipements de Sécurité</h3>
             <PrintRegistrationButton 
-              registrationData={participant?.equipment} 
+              registrationData={equipmentData} 
               type="equipment" 
             />
           </div>
+          
+          {isLoadingEquipment ? (
+            <div className="text-gray-400">Chargement des équipements...</div>
+          ) : equipmentData ? (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-red-500 font-medium mb-1">Équipement Pilote</h3>
+                  <p className="text-gray-300">Casque: {equipmentData.helmet_brand || "Non renseigné"}</p>
+                  <p className="text-gray-300">Combinaison: {equipmentData.suit_brand || "Non renseigné"}</p>
+                </div>
+                <div>
+                  <h3 className="text-red-500 font-medium mb-1">Équipement Copilote</h3>
+                  <p className="text-gray-300">Casque: {equipmentData.copilot_helmet_brand || "Non renseigné"}</p>
+                  <p className="text-gray-300">Combinaison: {equipmentData.copilot_suit_brand || "Non renseigné"}</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-gray-400">Aucun équipement enregistré</div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

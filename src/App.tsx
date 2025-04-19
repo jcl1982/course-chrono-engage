@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,7 +15,7 @@ import ParticipantManager from "./pages/Organizer/ParticipantManager";
 import Statistics from "./pages/Organizer/Statistics";
 import Auth from "./pages/Auth";
 import SafetyEquipmentForm from "./pages/Driver/SafetyEquipmentForm";
-import CalendarPage from "./pages/Calendar";
+import CalendarPage from "./pages/Calendar/Index";
 
 const queryClient = new QueryClient();
 

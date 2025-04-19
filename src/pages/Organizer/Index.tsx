@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { OrganizerGuard } from "@/components/auth/OrganizerGuard";
@@ -65,34 +66,35 @@ const OrganizerSpace = () => {
           </div>
         </header>
 
-      <main className="container mx-auto py-8 px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {menuItems.map((item) => (
-            <Card 
-              key={item.title}
-              className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors cursor-pointer"
-              onClick={() => navigate(item.href)}
-            >
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <item.icon className="w-6 h-6 text-red-500" />
-                  <div>
-                    <CardTitle className="text-red-500">{item.title}</CardTitle>
-                    <CardDescription className="text-gray-400">
-                      {item.description}
-                    </CardDescription>
+        <main className="container mx-auto py-8 px-4 md:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {menuItems.map((item) => (
+              <Card 
+                key={item.title}
+                className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors cursor-pointer"
+                onClick={() => navigate(item.href)}
+              >
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <item.icon className="w-6 h-6 text-red-500" />
+                    <div>
+                      <CardTitle className="text-red-500">{item.title}</CardTitle>
+                      <CardDescription className="text-gray-400">
+                        {item.description}
+                      </CardDescription>
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300">
-                  {item.content}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </main>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-300">
+                    {item.content}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </main>
+      </div>
     </OrganizerGuard>
   );
 };

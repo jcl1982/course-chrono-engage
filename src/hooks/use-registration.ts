@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { EventType } from "@/pages/Registration/RegistrationForm";
 import { useParams } from "react-router-dom";
@@ -57,7 +56,7 @@ export const useRegistration = () => {
   };
 
   const handleNext = () => {
-    if (selectedTab === "personal") {
+    if (selectedTab === "personal" && formData) {
       setSelectedTab("vehicle");
     } else if (selectedTab === "vehicle") {
       setSelectedTab("equipment");
@@ -142,4 +141,3 @@ export const useRegistration = () => {
     setShowNewEquipmentForm,
   };
 };
-

@@ -1,4 +1,3 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfoForm from "@/components/registration/PersonalInfoForm";
 import VehicleSelector from "./VehicleSelector";
@@ -78,10 +77,10 @@ export const RegistrationTabs = ({
               onSelectEquipment={(equipment) => onSelectEquipment(equipment, "driver")}
               onNewEquipment={onNewEquipment}
               equipmentType="driver"
+              eventType={eventType}
             />
           </div>
 
-          {/* Ne montrer l'équipement du copilote que pour les rallyes */}
           {eventType === "rally" && selectedDriverEquipment && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold mb-4">Équipement du Copilote</h3>
@@ -89,6 +88,7 @@ export const RegistrationTabs = ({
                 onSelectEquipment={(equipment) => onSelectEquipment(equipment, "copilot")}
                 onNewEquipment={onNewEquipment}
                 equipmentType="copilot"
+                eventType={eventType}
               />
             </div>
           )}

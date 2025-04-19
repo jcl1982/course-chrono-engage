@@ -1,18 +1,14 @@
+
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { EventType } from "@/pages/Registration/RegistrationForm";
 
 interface SavedEquipment {
   id: string;
@@ -22,15 +18,19 @@ interface SavedEquipment {
   created_at: string;
 }
 
-export const SavedEquipmentSelector = ({
-  onSelectEquipment,
-  onNewEquipment,
-  equipmentType = "driver"
-}: {
+interface SavedEquipmentSelectorProps {
   onSelectEquipment: (equipment: SavedEquipment | null) => void;
   onNewEquipment: () => void;
   equipmentType?: "driver" | "copilot";
-}) => {
+  eventType?: EventType;
+}
+
+export const SavedEquipmentSelector = ({
+  onSelectEquipment,
+  onNewEquipment,
+  equipmentType = "driver",
+  eventType = "rally"
+}: SavedEquipmentSelectorProps) => {
   const [savedEquipment, setSavedEquipment] = useState<SavedEquipment[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const [selectedRole, setSelectedRole] = useState<"driver" | "copilot">("driver");
@@ -77,17 +77,19 @@ export const SavedEquipmentSelector = ({
   if (savedEquipment.length === 0) {
     return (
       <div className="space-y-6">
-        <div className="flex justify-center mb-4">
-          <Select value={selectedRole} onValueChange={(value: "driver" | "copilot") => setSelectedRole(value)}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Sélectionner le rôle" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="driver">Équipement Pilote</SelectItem>
-              <SelectItem value="copilot">Équipement Copilote</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {eventType === "rally" && (
+          <div className="flex justify-center mb-4">
+            <Select value={selectedRole} onValueChange={(value: "driver" | "copilot") => setSelectedRole(value)}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Sélectionner le rôle" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="driver">Équipement Pilote</SelectItem>
+                <SelectItem value="copilot">Équipement Copilote</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <div className="text-center">
           <p className="text-gray-500 mb-4">Aucun équipement enregistré</p>
           <Button onClick={handleNewEquipment}>
@@ -101,17 +103,19 @@ export const SavedEquipmentSelector = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-center mb-4">
-        <Select value={selectedRole} onValueChange={(value: "driver" | "copilot") => setSelectedRole(value)}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Sélectionner le rôle" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="driver">Équipement Pilote</SelectItem>
-            <SelectItem value="copilot">Équipement Copilote</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {eventType === "rally" && (
+        <div className="flex justify-center mb-4">
+          <Select value={selectedRole} onValueChange={(value: "driver" | "copilot") => setSelectedRole(value)}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Sélectionner le rôle" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="driver">Équipement Pilote</SelectItem>
+              <SelectItem value="copilot">Équipement Copilote</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       <RadioGroup value={selectedId} onValueChange={handleSelection}>
         {savedEquipment.map((equipment) => (

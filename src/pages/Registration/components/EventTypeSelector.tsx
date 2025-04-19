@@ -1,39 +1,95 @@
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { EventType } from "../RegistrationForm";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Flag, Mountain, Trophy } from "lucide-react";
 
-interface EventTypeSelectorProps {
-  selectedType: EventType;
-  onTypeSelect: (type: EventType) => void;
+interface Event {
+  id: string;
+  name: string;
+  type: 'rally' | 'hillclimb' | 'slalom';
+  date: string;
+  location: string;
+  status: string;
 }
 
-export const EventTypeSelector = ({ selectedType, onTypeSelect }: EventTypeSelectorProps) => {
-  const eventTypes = [
-    { id: "rally", name: "Rallye", description: "Course sur différentes étapes et terrains" },
-    { id: "hillclimb", name: "Course de Côte", description: "Course en montée sur route fermée" },
-    { id: "slalom", name: "Slalom", description: "Parcours technique avec obstacles" },
-  ];
+interface EventTypeSelectorProps {
+  onEventSelect: (event: Event) => void;
+  selectedEvent?: Event;
+  events: Event[];
+}
+
+export const EventTypeSelector = ({ onEventSelect, selectedEvent, events }: EventTypeSelectorProps) => {
+  const getEventIcon = (type: string) => {
+    switch (type) {
+      case 'rally':
+        return <Trophy className="h-4 w-4 text-red-500" />;
+      case 'hillclimb':
+        return <Mountain className="h-4 w-4 text-red-500" />;
+      case 'slalom':
+        return <Flag className="h-4 w-4 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const getEventTypeName = (type: string) => {
+    switch (type) {
+      case 'rally':
+        return 'Rallye';
+      case 'hillclimb':
+        return 'Course de côte';
+      case 'slalom':
+        return 'Slalom';
+      default:
+        return type;
+    }
+  };
+
+  if (events.length === 0) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-center text-muted-foreground">
+            Aucune épreuve n'est actuellement ouverte aux inscriptions
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <div className="mb-6">
-      <h3 className="text-lg font-semibold mb-4">Type d'Événement</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {eventTypes.map((type) => (
-          <Card 
-            key={type.id}
-            className={`cursor-pointer transition-colors ${
-              selectedType === type.id ? "border-2 border-primary" : "border border-input"
-            }`}
-            onClick={() => onTypeSelect(type.id as EventType)}
-          >
-            <CardContent className="p-4">
-              <h4 className="font-semibold">{type.name}</h4>
-              <p className="text-sm text-muted-foreground">{type.description}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+    <div className="w-full max-w-sm mx-auto">
+      <Select 
+        value={selectedEvent?.id} 
+        onValueChange={(eventId) => {
+          const event = events.find(e => e.id === eventId);
+          if (event) {
+            onEventSelect(event);
+          }
+        }}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Sélectionner une épreuve" />
+        </SelectTrigger>
+        <SelectContent>
+          {events.map((event) => (
+            <SelectItem key={event.id} value={event.id}>
+              <div className="flex items-center gap-2">
+                {getEventIcon(event.type)}
+                <span>
+                  {event.name} - {getEventTypeName(event.type)} - {new Date(event.date).toLocaleDateString()}
+                </span>
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

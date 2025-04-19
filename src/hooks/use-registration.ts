@@ -1,16 +1,12 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useEventType } from "./registration/use-event-type";
-import { useRallyDetails } from "./registration/use-rally-details";
 import { useRegistrationForm } from "./registration/use-registration-form";
 import { useRegistrationSubmit } from "./registration/use-registration-submit";
 
 export const useRegistration = () => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [eventDetails, setEventDetails] = useState<any>(null);
 
-  const { eventType, setEventType } = useEventType();
-  const { rallyDetails, setSelectedRally } = useRallyDetails();
   const {
     selectedTab,
     formData,
@@ -26,6 +22,7 @@ export const useRegistration = () => {
     handleSelectEquipment,
     setShowNewEquipmentForm,
   } = useRegistrationForm();
+
   const { submitting, handleSubmit } = useRegistrationSubmit();
 
   useEffect(() => {
@@ -40,9 +37,8 @@ export const useRegistration = () => {
   }, []);
 
   return {
-    eventType,
+    eventDetails,
     selectedTab,
-    rallyDetails,
     currentUserId,
     selectedVehicle,
     formData,
@@ -55,19 +51,18 @@ export const useRegistration = () => {
     handlePrevious,
     handleSubmit: () => handleSubmit(
       currentUserId,
-      rallyDetails?.id,
-      rallyDetails,
+      eventDetails?.id,
+      eventDetails,
       selectedVehicle,
       formData,
       selectedDriverEquipment,
       selectedCopilotEquipment,
-      eventType
+      eventDetails?.type
     ),
     handlePersonalInfoSubmit,
     setSelectedVehicle,
     handleSelectEquipment,
     setShowNewEquipmentForm,
-    setSelectedRally,
-    setEventType,
+    setEventDetails,
   };
 };

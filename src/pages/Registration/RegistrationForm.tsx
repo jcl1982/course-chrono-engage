@@ -5,17 +5,15 @@ import { NavigationButtons } from "./components/NavigationButtons";
 import { useRegistration } from "@/hooks/use-registration";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
-import { RallySelector } from "./components/RallySelector";
-import { EventTypeSelector } from "./components/EventTypeSelector";
+import { useNavigate } from "react-router-dom";
+import { EventList } from "./components/EventList";
 
 export type EventType = "rally" | "hillclimb" | "slalom";
 
 const RegistrationForm = () => {
   const {
-    eventType,
     selectedTab,
-    rallyDetails,
+    eventDetails,
     currentUserId,
     selectedVehicle,
     formData,
@@ -31,12 +29,10 @@ const RegistrationForm = () => {
     setSelectedVehicle,
     handleSelectEquipment,
     setShowNewEquipmentForm,
-    setSelectedRally,
-    setEventType,
+    setEventDetails,
   } = useRegistration();
   
   const navigate = useNavigate();
-  const { rallyId } = useParams();
 
   return (
     <div className="container mx-auto p-6">
@@ -47,24 +43,15 @@ const RegistrationForm = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Event Type Selector */}
-          <EventTypeSelector 
-            selectedType={eventType} 
-            onTypeSelect={setEventType} 
-          />
+          {/* Event Selection */}
+          <div className="mb-6">
+            <EventList 
+              onEventSelect={setEventDetails} 
+              selectedEvent={eventDetails}
+            />
+          </div>
 
-          {/* Rally Selector - only show for rally type events */}
-          {eventType === "rally" && !rallyId && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-4">Sélection du Rallye</h3>
-              <RallySelector 
-                onRallySelect={setSelectedRally} 
-                selectedRallyId={rallyDetails?.id}
-              />
-            </div>
-          )}
-
-          {(rallyDetails || eventType !== "rally") ? (
+          {eventDetails ? (
             <>
               <RegistrationTabs
                 selectedTab={selectedTab}
@@ -79,7 +66,7 @@ const RegistrationForm = () => {
                 selectedDriverEquipment={selectedDriverEquipment}
                 selectedCopilotEquipment={selectedCopilotEquipment}
                 onPersonalInfoSubmit={handlePersonalInfoSubmit}
-                eventType={eventType}
+                eventType={eventDetails.type}
               />
               
               <NavigationButtons
@@ -90,11 +77,11 @@ const RegistrationForm = () => {
                 submitting={submitting}
               />
             </>
-          ) : eventType === "rally" && !rallyId && (
+          ) : (
             <Alert variant="destructive" className="mt-6">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Veuillez sélectionner un rallye pour commencer l'inscription
+                Veuillez sélectionner une épreuve pour commencer l'inscription
               </AlertDescription>
             </Alert>
           )}

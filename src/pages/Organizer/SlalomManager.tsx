@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { type Database } from "@/integrations/supabase/types";
+import { CompetitionTypeHeader } from "./components/CompetitionTypeHeader";
 
 type Competition = Database["public"]["Tables"]["competitions"]["Row"];
 
@@ -75,14 +76,7 @@ const SlalomManager = () => {
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-2">
             <BackButton />
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-red-500">
-                Gestion des Slaloms
-              </h1>
-              <p className="text-gray-400">
-                Gérez vos slaloms et les inscriptions
-              </p>
-            </div>
+            <CompetitionTypeHeader type="slalom" />
             <Button
               onClick={() => {
                 setSelectedCompetition(undefined);

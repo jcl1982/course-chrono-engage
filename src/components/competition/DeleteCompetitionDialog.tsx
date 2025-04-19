@@ -1,4 +1,5 @@
 
+import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +14,7 @@ import {
 interface DeleteCompetitionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
   competitionName?: string;
 }
 
@@ -23,25 +24,36 @@ export const DeleteCompetitionDialog = ({
   onConfirm,
   competitionName,
 }: DeleteCompetitionDialogProps) => {
+  const { toast } = useToast();
+
+  const handleConfirm = async () => {
+    try {
+      await onConfirm();
+    } catch (error) {
+      console.error("Error deleting competition:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-[#1a1a1a] border-red-900 text-white">
+      <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-red-500">
-            Confirmer la suppression
-          </AlertDialogTitle>
-          <AlertDialogDescription className="text-gray-400">
-            Êtes-vous sûr de vouloir supprimer {competitionName || "cette compétition"} ?
+          <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Cette action supprimera définitivement {competitionName}.
             Cette action est irréversible.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="bg-transparent border-red-900 text-red-500 hover:bg-red-950">
-            Annuler
-          </AlertDialogCancel>
+          <AlertDialogCancel>Annuler</AlertDialogCancel>
           <AlertDialogAction
-            onClick={onConfirm}
-            className="bg-red-600 hover:bg-red-700"
+            onClick={handleConfirm}
+            className="bg-red-500 hover:bg-red-600"
           >
             Supprimer
           </AlertDialogAction>

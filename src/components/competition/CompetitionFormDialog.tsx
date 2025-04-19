@@ -1,23 +1,23 @@
 
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast";
 import { Form } from "@/components/ui/form";
-import { FormInput } from "@/components/form/FormInput";
-import { FormSelect } from "@/components/form/FormSelect";
 import { Button } from "@/components/ui/button";
+import { FormInput } from "@/components/form/FormInput";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { competitionFormSchema, type CompetitionFormData } from "./schemas/competitionSchema";
+import { useQueryClient } from "@tanstack/react-query";
 import { type Database } from "@/integrations/supabase/types";
-import { useEffect } from "react";
 
-type Competition = Database["public"]["Tables"]["competitions"]["Insert"];
+type Competition = Database["public"]["Tables"]["competitions"]["Row"];
 
 interface CompetitionFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   competition?: Competition;
-  type: "hillclimb" | "slalom";
+  type: 'hillclimb' | 'slalom';
 }
 
 export const CompetitionFormDialog = ({ 
@@ -28,76 +28,69 @@ export const CompetitionFormDialog = ({
 }: CompetitionFormDialogProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const form = useForm<Competition>({
-    defaultValues: {
-      name: competition?.name || "",
-      date: competition?.date || "",
-      location: competition?.location || "",
-      description: competition?.description || "",
-      status: competition?.status || "DRAFT",
-      registration_deadline: competition?.registration_deadline || "",
-      max_participants: competition?.max_participants || 0,
-      registration_open: false,
-      type: type,
+  const form = useForm<CompetitionFormData>({
+    resolver: zodResolver(competitionFormSchema),
+    defaultValues: competition ? {
+      name: competition.name,
+      description: competition.description || "",
+      location: competition.location,
+      date: competition.date,
+      maxParticipants: competition.max_participants?.toString() || "",
+      registrationDeadline: competition.registration_deadline || undefined,
+    } : {
+      name: "",
+      description: "",
+      location: "",
+      date: "",
+      maxParticipants: "",
+      registrationDeadline: undefined,
     },
   });
 
-  // Reset form when dialog opens/closes or competition changes
-  useEffect(() => {
-    if (open) {
-      form.reset({
-        name: competition?.name || "",
-        date: competition?.date || "",
-        location: competition?.location || "",
-        description: competition?.description || "",
-        status: competition?.status || "DRAFT",
-        registration_deadline: competition?.registration_deadline || "",
-        max_participants: competition?.max_participants || 0,
-        registration_open: competition?.registration_open || false,
-        type: type,
-      });
-    }
-  }, [open, competition, form, type]);
-
-  const onSubmit = async (data: Competition) => {
+  const onSubmit = async (data: CompetitionFormData) => {
     try {
-      // Récupérer l'ID de l'utilisateur connecté
-      const { data: sessionData } = await supabase.auth.getSession();
-      const userId = sessionData.session?.user.id;
+      const { error } = competition 
+        ? await supabase
+            .from('competitions')
+            .update({
+              name: data.name,
+              description: data.description,
+              location: data.location,
+              date: data.date,
+              max_participants: data.maxParticipants ? parseInt(data.maxParticipants) : null,
+              registration_deadline: data.registrationDeadline,
+            })
+            .eq('id', competition.id)
+        : await supabase
+            .from('competitions')
+            .insert({
+              name: data.name,
+              description: data.description,
+              location: data.location,
+              date: data.date,
+              max_participants: data.maxParticipants ? parseInt(data.maxParticipants) : null,
+              registration_deadline: data.registrationDeadline,
+              type,
+              status: 'DRAFT',
+              created_by: (await supabase.auth.getUser()).data.user?.id,
+            });
+
+      if (error) throw error;
+
+      await queryClient.invalidateQueries({ queryKey: ['competitions', type] });
       
-      if (!userId) {
-        toast({
-          title: "Erreur",
-          description: "Vous devez être connecté pour créer une compétition",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (competition?.id) {
-        // Mise à jour d'une compétition existante
-        const { error } = await supabase
-          .from("competitions")
-          .update(data)
-          .eq("id", competition.id);
-
-        if (error) throw error;
-        toast({ title: "La compétition a été modifiée avec succès" });
-      } else {
-        // Création d'une nouvelle compétition
-        const { error } = await supabase
-          .from("competitions")
-          .insert([{ ...data, type, created_by: userId }]);
-
-        if (error) throw error;
-        toast({ title: "La compétition a été créée avec succès" });
-      }
-
-      await queryClient.invalidateQueries({ queryKey: ["competitions", type] });
+      toast({ 
+        title: competition 
+          ? `${type === 'hillclimb' ? 'Course de côte' : 'Slalom'} modifié` 
+          : `${type === 'hillclimb' ? 'Course de côte' : 'Slalom'} créé`,
+        description: competition
+          ? "Les modifications ont été enregistrées"
+          : "Le nouvel événement a été créé avec succès"
+      });
+      
       onOpenChange(false);
-      form.reset();
     } catch (error) {
-      console.error("Error saving competition:", error);
+      console.error('Error saving competition:', error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'enregistrement",
@@ -108,10 +101,10 @@ export const CompetitionFormDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#1a1a1a] text-white border-red-900">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-red-500">
-            {competition ? "Modifier la compétition" : "Nouvelle compétition"}
+          <DialogTitle>
+            {competition ? "Modifier" : "Ajouter"} {type === 'hillclimb' ? 'une course de côte' : 'un slalom'}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -119,64 +112,40 @@ export const CompetitionFormDialog = ({
             <FormInput
               name="name"
               label="Nom"
-              className="bg-black border-red-900 text-white"
+              placeholder="Nom de l'événement"
+            />
+            <FormInput
+              name="description"
+              label="Description"
+              placeholder="Description de l'événement"
             />
             <FormInput
               name="location"
               label="Lieu"
-              className="bg-black border-red-900 text-white"
+              placeholder="Lieu de l'événement"
             />
             <FormInput
               name="date"
               label="Date"
               type="date"
-              className="bg-black border-red-900 text-white"
             />
             <FormInput
-              name="description"
-              label="Description"
-              className="bg-black border-red-900 text-white"
-            />
-            <FormInput
-              name="max_participants"
+              name="maxParticipants"
               label="Nombre maximum de participants"
               type="number"
-              className="bg-black border-red-900 text-white"
+              placeholder="Laissez vide si pas de limite"
             />
             <FormInput
-              name="registration_deadline"
+              name="registrationDeadline"
               label="Date limite d'inscription"
               type="date"
-              className="bg-black border-red-900 text-white"
             />
-            <FormSelect
-              name="status"
-              label="Statut"
-              options={[
-                { value: "DRAFT", label: "Brouillon" },
-                { value: "PUBLISHED", label: "Publié" },
-                { value: "FINISHED", label: "Terminé" },
-                { value: "CANCELLED", label: "Annulé" },
-              ]}
-              className="bg-black border-red-900 text-white"
-            />
-            <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                className="border-red-500 text-red-500 hover:bg-red-950"
-              >
-                Annuler
-              </Button>
-              <Button type="submit" className="bg-red-500 hover:bg-red-600">
-                {competition ? "Modifier" : "Créer"}
-              </Button>
-            </div>
+            <Button type="submit" className="w-full">
+              {competition ? "Enregistrer les modifications" : "Créer l'événement"}
+            </Button>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
   );
 };
-

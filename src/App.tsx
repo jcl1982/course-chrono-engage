@@ -16,6 +16,8 @@ import Auth from "./pages/Auth";
 import SafetyEquipmentForm from "./pages/Driver/SafetyEquipmentForm";
 import CalendarPage from "./pages/Calendar/Index";
 import ResultsPage from "./pages/Results/Index";
+import HillclimbManager from "./pages/Organizer/HillclimbManager";
+import SlalomManager from "./pages/Organizer/SlalomManager";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,8 @@ const App = () => (
           <Route path="/driver/equipment/:id" element={<SafetyEquipmentForm />} />
           <Route path="/driver/equipment/copilot/:id" element={<SafetyEquipmentForm />} />
           <Route path="/organizer/rallies" element={<RallyManager />} />
+          <Route path="/organizer/hillclimbs" element={<HillclimbManager />} />
+          <Route path="/organizer/slaloms" element={<SlalomManager />} />
           <Route path="/organizer/participants" element={<ParticipantManager />} />
           <Route path="/organizer/statistics" element={<Statistics />} />
           <Route path="/registration/:rallyId" element={<RegistrationForm />} />

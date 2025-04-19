@@ -1,8 +1,11 @@
+
 import { useState, useEffect } from "react";
 import { EventType } from "@/pages/Registration/RegistrationForm";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+import { personalInfoSchema } from "@/components/registration/schemas/personalInfoSchema";
 
 export const useRegistration = () => {
   const [eventType, setEventType] = useState<EventType>("rally");
@@ -10,10 +13,10 @@ export const useRegistration = () => {
   const [rallyDetails, setRallyDetails] = useState<any>(null);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
-  const [selectedEquipment, setSelectedEquipment] = useState<string | null>(null);
   const [showNewEquipmentForm, setShowNewEquipmentForm] = useState(false);
   const [selectedDriverEquipment, setSelectedDriverEquipment] = useState<any>(null);
   const [selectedCopilotEquipment, setSelectedCopilotEquipment] = useState<any>(null);
+  const [formData, setFormData] = useState<z.infer<typeof personalInfoSchema> | null>(null);
 
   const { rallyId } = useParams();
   const { toast } = useToast();
@@ -69,8 +72,13 @@ export const useRegistration = () => {
     }
   };
 
+  const handlePersonalInfoSubmit = (data: z.infer<typeof personalInfoSchema>) => {
+    setFormData(data);
+    handleNext();
+  };
+
   const handleSubmit = async () => {
-    if (!currentUserId || !rallyId || !selectedVehicle) {
+    if (!currentUserId || !rallyId || !selectedVehicle || !formData) {
       toast({
         title: "Informations manquantes",
         description: "Veuillez remplir toutes les informations requises",
@@ -86,6 +94,7 @@ export const useRegistration = () => {
           driver_id: currentUserId,
           rally_id: rallyId,
           vehicle_id: selectedVehicle,
+          driver_info: formData,
           status: 'pending'
         }]);
 
@@ -119,17 +128,18 @@ export const useRegistration = () => {
     rallyDetails,
     currentUserId,
     selectedVehicle,
-    selectedEquipment,
+    formData,
     showNewEquipmentForm,
+    selectedDriverEquipment,
+    selectedCopilotEquipment,
     handleTabChange,
     handleNext,
     handlePrevious,
     handleSubmit,
+    handlePersonalInfoSubmit,
     setSelectedVehicle,
-    setSelectedEquipment,
-    setShowNewEquipmentForm,
-    selectedDriverEquipment,
-    selectedCopilotEquipment,
     handleSelectEquipment,
+    setShowNewEquipmentForm,
   };
 };
+

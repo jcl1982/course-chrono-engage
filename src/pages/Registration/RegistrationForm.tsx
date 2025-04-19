@@ -13,6 +13,7 @@ const RegistrationForm = () => {
     rallyDetails,
     currentUserId,
     selectedVehicle,
+    formData,
     showNewEquipmentForm,
     selectedDriverEquipment,
     selectedCopilotEquipment,
@@ -20,6 +21,7 @@ const RegistrationForm = () => {
     handleNext,
     handlePrevious,
     handleSubmit,
+    handlePersonalInfoSubmit,
     setSelectedVehicle,
     handleSelectEquipment,
     setShowNewEquipmentForm,
@@ -39,12 +41,14 @@ const RegistrationForm = () => {
             onTabChange={handleTabChange}
             currentUserId={currentUserId}
             selectedVehicle={selectedVehicle}
+            formData={formData}
             onSelectVehicle={setSelectedVehicle}
             showNewEquipmentForm={showNewEquipmentForm}
             onNewEquipment={() => setShowNewEquipmentForm(true)}
             onSelectEquipment={handleSelectEquipment}
             selectedDriverEquipment={selectedDriverEquipment}
             selectedCopilotEquipment={selectedCopilotEquipment}
+            onPersonalInfoSubmit={handlePersonalInfoSubmit}
           />
           
           <NavigationButtons

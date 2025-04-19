@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfoForm from "@/components/registration/PersonalInfoForm";
 import VehicleSelector from "./VehicleSelector";
@@ -80,7 +81,7 @@ export const RegistrationTabs = ({
             />
           </div>
 
-          {/* Only show co-pilot equipment for rally events */}
+          {/* Ne montrer l'équipement du copilote que pour les rallyes */}
           {eventType === "rally" && selectedDriverEquipment && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold mb-4">Équipement du Copilote</h3>

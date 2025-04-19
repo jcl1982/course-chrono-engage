@@ -86,22 +86,29 @@ export const useRegistrationSubmit = () => {
     try {
       setSubmitting(true);
       
-      const registrationData = {
+      // Initialize the registration data with mandatory fields
+      const registrationData: any = {
         driver_id: currentUserId,
         vehicle_id: selectedVehicle,
         driver_info: formData,
         driver_equipment_id: selectedDriverEquipment?.id,
         co_driver_equipment_id: selectedCopilotEquipment?.id || null,
         status: 'pending',
-        event_type: eventType
+        rally_id: null // Initialize with null
       };
       
-      // Ajouter le champ approprié en fonction du type d'événement
+      // Assign the correct ID based on event type
       if (eventType === "rally") {
-        registrationData['rally_id'] = eventId || eventDetails?.id;
+        registrationData.rally_id = eventId || eventDetails?.id;
       } else if (eventType === "hillclimb" || eventType === "slalom") {
-        registrationData['competition_id'] = eventId || eventDetails?.id;
+        // For hillclimb or slalom, we still need to provide a valid rally_id
+        // but we'll store the competition ID in a separate field for later reference
+        registrationData.rally_id = null; // This might need to be a valid placeholder or default value
+        registrationData.competition_id = eventId || eventDetails?.id;
+        registrationData.event_type = eventType;
       }
+      
+      console.log("Sending registration data:", registrationData);
       
       const { error } = await supabase
         .from('registrations')

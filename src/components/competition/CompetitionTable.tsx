@@ -10,12 +10,13 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
 
 interface CompetitionTableProps {
   competitions: Competition[];
   onEdit: (competition: Competition) => void;
   onDelete: (competition: Competition) => void;
+  onToggleRegistration: (competition: Competition, open: boolean) => void;
   isLoading?: boolean;
 }
 
@@ -23,6 +24,7 @@ export const CompetitionTable = ({
   competitions,
   onEdit,
   onDelete,
+  onToggleRegistration,
   isLoading,
 }: CompetitionTableProps) => {
   if (isLoading) {
@@ -41,6 +43,7 @@ export const CompetitionTable = ({
           <TableHead>Date</TableHead>
           <TableHead>Lieu</TableHead>
           <TableHead>Statut</TableHead>
+          <TableHead>Inscriptions</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -52,6 +55,18 @@ export const CompetitionTable = ({
             <TableCell>{competition.location}</TableCell>
             <TableCell>
               <span className="capitalize">{competition.status.toLowerCase()}</span>
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={competition.registration_open}
+                  onCheckedChange={(checked) => onToggleRegistration(competition, checked)}
+                  disabled={competition.status === 'FINISHED' || competition.status === 'CANCELLED'}
+                />
+                <span className="text-sm text-gray-500">
+                  {competition.registration_open ? 'Ouvertes' : 'Fermées'}
+                </span>
+              </div>
             </TableCell>
             <TableCell className="flex gap-2">
               <Button

@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,9 +8,9 @@ const Index = () => {
     <div className="min-h-screen bg-black text-white relative">
       {/* Background image with overlay */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-30"
         style={{ 
-          backgroundImage: 'url("https://images.unsplash.com/photo-1612894668435-54e7719596d1?q=80&w=2000")',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=2000")',
           backgroundAttachment: 'fixed'
         }}
       />

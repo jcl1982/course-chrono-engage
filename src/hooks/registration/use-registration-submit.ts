@@ -5,6 +5,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { EventType } from "@/pages/Registration/RegistrationForm";
 
+// Define an interface for the registration data to ensure type safety
+interface RegistrationData {
+  driver_id: string;
+  vehicle_id: string;
+  driver_info: any;
+  driver_equipment_id?: string;
+  co_driver_equipment_id?: string | null;
+  status: string;
+  rally_id: string | null;
+  competition_id?: string;
+  event_type?: EventType;
+}
+
 export const useRegistrationSubmit = () => {
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
@@ -87,9 +100,9 @@ export const useRegistrationSubmit = () => {
       setSubmitting(true);
       
       // Initialize the registration data with mandatory fields
-      const registrationData: any = {
-        driver_id: currentUserId,
-        vehicle_id: selectedVehicle,
+      const registrationData: RegistrationData = {
+        driver_id: currentUserId!,
+        vehicle_id: selectedVehicle!,
         driver_info: formData,
         driver_equipment_id: selectedDriverEquipment?.id,
         co_driver_equipment_id: selectedCopilotEquipment?.id || null,

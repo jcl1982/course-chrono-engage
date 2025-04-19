@@ -12,9 +12,10 @@ import { z } from "zod";
 interface PersonalInfoFormProps {
   defaultValues?: z.infer<typeof personalInfoSchema> | null;
   onSubmit: (data: z.infer<typeof personalInfoSchema>) => void;
+  eventType?: "rally" | "hillclimb" | "slalom";
 }
 
-const PersonalInfoForm = ({ defaultValues, onSubmit }: PersonalInfoFormProps) => {
+const PersonalInfoForm = ({ defaultValues, onSubmit, eventType = "rally" }: PersonalInfoFormProps) => {
   const form = useForm<PersonalInfoFormData>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: defaultValues || {
@@ -38,7 +39,7 @@ const PersonalInfoForm = ({ defaultValues, onSubmit }: PersonalInfoFormProps) =>
         phone: "",
         relationship: "",
       },
-      coPilote: {
+      coPilote: eventType === "rally" ? {
         firstName: "",
         lastName: "",
         birthDate: "",
@@ -58,7 +59,7 @@ const PersonalInfoForm = ({ defaultValues, onSubmit }: PersonalInfoFormProps) =>
           phone: "",
           relationship: "",
         },
-      },
+      } : undefined,
     },
   });
 
@@ -69,20 +70,24 @@ const PersonalInfoForm = ({ defaultValues, onSubmit }: PersonalInfoFormProps) =>
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Tabs defaultValue="driver" className="w-full space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="driver">Pilote</TabsTrigger>
-            <TabsTrigger value="copilot">Co-Pilote</TabsTrigger>
-          </TabsList>
+        {eventType === "rally" ? (
+          <Tabs defaultValue="driver" className="w-full space-y-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="driver">Pilote</TabsTrigger>
+              <TabsTrigger value="copilot">Co-Pilote</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="driver">
-            <DriverInfo />
-          </TabsContent>
+            <TabsContent value="driver">
+              <DriverInfo />
+            </TabsContent>
 
-          <TabsContent value="copilot">
-            <CoPilotInfo />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="copilot">
+              <CoPilotInfo />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <DriverInfo />
+        )}
 
         <div className="flex justify-end">
           <Button type="submit">Sauvegarder</Button>

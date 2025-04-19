@@ -1,4 +1,3 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfoForm from "@/components/registration/PersonalInfoForm";
 import VehicleSelector from "./VehicleSelector";
@@ -49,7 +48,11 @@ export const RegistrationTabs = ({
       <TabsContent value="personal">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold mb-4">Informations du Pilote</h3>
-          <PersonalInfoForm defaultValues={formData} onSubmit={onPersonalInfoSubmit} />
+          <PersonalInfoForm 
+            defaultValues={formData} 
+            onSubmit={onPersonalInfoSubmit} 
+            eventType={eventType}
+          />
         </div>
       </TabsContent>
 

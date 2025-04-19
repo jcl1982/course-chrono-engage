@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -8,6 +7,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import PrintRegistrationButton from "../registration/PrintRegistrationButton";
 
 interface ParticipantDetailsDialogProps {
   participantId: string | null;
@@ -58,37 +58,54 @@ export const ParticipantDetailsDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#1a1a1a] text-white border border-red-900">
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle className="text-red-500 text-xl">
-            {isLoading ? "Chargement..." : `${participant?.first_name} ${participant?.last_name}`}
+          <DialogTitle className="text-xl font-bold">
+            Détails du Participant
           </DialogTitle>
         </DialogHeader>
-
-        {isLoading ? (
-          <div className="text-gray-400">Chargement des détails...</div>
-        ) : participant ? (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-red-500 font-medium mb-1">Contact</h3>
-                <p className="text-gray-300">Email: {participant.email}</p>
-                <p className="text-gray-300">Téléphone: {participant.phone || "Non renseigné"}</p>
-              </div>
-              <div>
-                <h3 className="text-red-500 font-medium mb-1">Informations médicales</h3>
-                <p className="text-gray-300">Groupe sanguin: {participant.blood_type || "Non renseigné"}</p>
-              </div>
-            </div>
-            <div>
-              <h3 className="text-red-500 font-medium mb-1">Licence</h3>
-              <p className="text-gray-300">Numéro: {participant.license_number || "Non renseigné"}</p>
-              <p className="text-gray-300">Catégorie: {participant.license_category || "Non renseigné"}</p>
-            </div>
+        
+        <div className="grid gap-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">Informations d'Engagement</h3>
+            <PrintRegistrationButton 
+              registrationData={participant} 
+              type="registration" 
+            />
           </div>
-        ) : (
-          <div className="text-gray-400">Aucune donnée disponible</div>
-        )}
+          {isLoading ? (
+            <div className="text-gray-400">Chargement des détails...</div>
+          ) : participant ? (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-red-500 font-medium mb-1">Contact</h3>
+                  <p className="text-gray-300">Email: {participant.email}</p>
+                  <p className="text-gray-300">Téléphone: {participant.phone || "Non renseigné"}</p>
+                </div>
+                <div>
+                  <h3 className="text-red-500 font-medium mb-1">Informations médicales</h3>
+                  <p className="text-gray-300">Groupe sanguin: {participant.blood_type || "Non renseigné"}</p>
+                </div>
+              </div>
+              <div>
+                <h3 className="text-red-500 font-medium mb-1">Licence</h3>
+                <p className="text-gray-300">Numéro: {participant.license_number || "Non renseigné"}</p>
+                <p className="text-gray-300">Catégorie: {participant.license_category || "Non renseigné"}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-gray-400">Aucune donnée disponible</div>
+          )}
+
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">Équipements de Sécurité</h3>
+            <PrintRegistrationButton 
+              registrationData={participant?.equipment} 
+              type="equipment" 
+            />
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

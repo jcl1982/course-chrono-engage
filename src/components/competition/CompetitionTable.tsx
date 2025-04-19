@@ -48,7 +48,7 @@ export const CompetitionTable = ({
         {competitions.map((competition) => (
           <TableRow key={competition.id}>
             <TableCell>{competition.name}</TableCell>
-            <TableCell>{formatDate(competition.date)}</TableCell>
+            <TableCell>{new Date(competition.date).toLocaleDateString('fr-FR')}</TableCell>
             <TableCell>{competition.location}</TableCell>
             <TableCell>
               <span className="capitalize">{competition.status.toLowerCase()}</span>

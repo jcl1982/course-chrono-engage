@@ -12,8 +12,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { type Database } from "@/integrations/supabase/types";
 import { CompetitionTypeHeader } from "./components/CompetitionTypeHeader";
+import { Competition, CompetitionStatus } from "@/types/competition";
 
-type Competition = Database["public"]["Tables"]["competitions"]["Row"];
+type SupabaseCompetition = Database["public"]["Tables"]["competitions"]["Row"];
 
 const HillclimbManager = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -32,7 +33,23 @@ const HillclimbManager = () => {
         .order("date", { ascending: true });
 
       if (error) throw error;
-      return data as Competition[];
+      
+      // Transform the raw data to match the Competition type
+      return data.map((item: SupabaseCompetition): Competition => ({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        location: item.location,
+        date: item.date,
+        status: item.status as CompetitionStatus,
+        type: 'hillclimb',
+        max_participants: item.max_participants,
+        registration_deadline: item.registration_deadline,
+        registration_open: item.registration_open,
+        created_by: item.created_by,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+      }));
     },
   });
 

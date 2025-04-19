@@ -109,6 +109,10 @@ export const useRegistrationSubmit = () => {
     try {
       setSubmitting(true);
       
+      console.log("Event type:", eventType);
+      console.log("Event details:", eventDetails);
+      console.log("Form data:", formData);
+      
       // Initialize the registration data with mandatory fields
       const registrationData: RegistrationData = {
         driver_id: currentUserId!,

@@ -1,12 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { EventType } from "@/pages/Registration/RegistrationForm";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { personalInfoSchema } from "@/components/registration/schemas/personalInfoSchema";
-import { useNavigate } from "react-router-dom";
 
 export const useRegistration = () => {
   const [eventType, setEventType] = useState<EventType>("rally");
@@ -40,6 +38,7 @@ export const useRegistration = () => {
           .single();
 
         if (error) {
+          console.error('Error fetching rally:', error);
           toast({
             title: "Erreur",
             description: "Impossible de charger les informations du rallye",
@@ -48,12 +47,23 @@ export const useRegistration = () => {
           return;
         }
 
-        setRallyDetails(data);
+        if (data) {
+          setRallyDetails(data);
+        } else {
+          toast({
+            title: "Rallye non trouvé",
+            description: "Le rallye spécifié n'existe pas",
+            variant: "destructive",
+          });
+          navigate("/");
+        }
+      } else {
+        console.log("No rally ID provided");
       }
     };
 
     fetchUserAndRally();
-  }, [rallyId, toast]);
+  }, [rallyId, toast, navigate]);
 
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
@@ -96,12 +106,13 @@ export const useRegistration = () => {
       return false;
     }
     
-    if (!rallyId) {
+    if (!rallyId || !rallyDetails) {
       toast({
         title: "Rallye non spécifié",
         description: "Aucun rallye sélectionné pour l'inscription",
         variant: "destructive",
       });
+      navigate("/");
       return false;
     }
     
@@ -145,7 +156,6 @@ export const useRegistration = () => {
     try {
       setSubmitting(true);
       
-      // Prepare the registration data
       const registrationData = {
         driver_id: currentUserId,
         rally_id: rallyId,
@@ -156,7 +166,6 @@ export const useRegistration = () => {
         status: 'pending'
       };
       
-      // Insert registration
       const { error, data } = await supabase
         .from('registrations')
         .insert([registrationData])
@@ -169,7 +178,6 @@ export const useRegistration = () => {
         description: "Votre inscription au rallye a été enregistrée"
       });
       
-      // Navigate to driver dashboard
       navigate("/driver");
     } catch (error) {
       console.error("Error registering for rally:", error);

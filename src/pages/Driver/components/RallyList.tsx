@@ -41,11 +41,13 @@ const RallyList = ({ userId }: RallyListProps) => {
 
       if (compError) throw compError;
 
-      const formattedRallies = (rallies || []).map(rally => ({
+      // Properly format rallies with type property
+      const formattedRallies = rallies ? rallies.map(rally => ({
         ...rally,
         type: 'rally' as const
-      }));
+      })) : [];
 
+      // Combine both arrays ensuring they're not null
       return [...formattedRallies, ...(competitions || [])];
     }
   });

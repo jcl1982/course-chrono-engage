@@ -32,6 +32,8 @@ export const useRegistrationSubmit = () => {
     selectedDriverEquipment: any,
     eventType: EventType
   ) => {
+    console.log("Validation des données d'inscription...");
+    
     if (!currentUserId) {
       toast({
         title: "Connexion requise",
@@ -102,16 +104,22 @@ export const useRegistrationSubmit = () => {
   ) => {
     if (submitting) return;
     
+    console.log("Traitement de l'inscription en cours...");
+    console.log("Event type:", eventType);
+    console.log("Event ID:", eventId);
+    console.log("Event details:", eventDetails);
+    console.log("Selected vehicle:", selectedVehicle);
+    console.log("Form data:", formData);
+    console.log("Driver equipment:", selectedDriverEquipment);
+    console.log("Copilot equipment:", selectedCopilotEquipment);
+    
     if (!validateSubmission(currentUserId, eventId, eventDetails, selectedVehicle, formData, selectedDriverEquipment, eventType)) {
+      console.log("Validation échouée");
       return;
     }
 
     try {
       setSubmitting(true);
-      
-      console.log("Event type:", eventType);
-      console.log("Event details:", eventDetails);
-      console.log("Form data:", formData);
       
       // Initialize the registration data with mandatory fields
       const registrationData: RegistrationData = {
@@ -126,35 +134,49 @@ export const useRegistrationSubmit = () => {
       
       // Assign the correct ID based on event type
       if (eventType === "rally") {
-        registrationData.rally_id = eventId || eventDetails?.id;
+        registrationData.rally_id = eventId || (eventDetails?.id ?? null);
       } else if (eventType === "hillclimb" || eventType === "slalom") {
         // Pour les courses de côte ou slaloms, rally_id reste null et on définit competition_id
-        registrationData.competition_id = eventId || eventDetails?.id;
+        registrationData.competition_id = eventId || (eventDetails?.id ?? null);
         registrationData.event_type = eventType;
       }
       
-      console.log("Sending registration data:", registrationData);
+      console.log("Données d'inscription prêtes à envoyer:", registrationData);
       
-      const { error } = await supabase
+      // Vérification supplémentaire des valeurs nulles
+      if (!registrationData.rally_id && !registrationData.competition_id) {
+        console.error("ID d'événement manquant");
+        throw new Error("Identifiant d'événement invalide");
+      }
+      
+      if (!registrationData.vehicle_id) {
+        console.error("ID de véhicule manquant");
+        throw new Error("Identifiant de véhicule invalide");
+      }
+      
+      const { data, error } = await supabase
         .from('registrations')
-        .insert(registrationData);
+        .insert(registrationData)
+        .select();
 
       if (error) {
-        console.error("Erreur détaillée:", error);
+        console.error("Erreur Supabase détaillée:", error);
         throw error;
       }
 
+      console.log("Réponse d'inscription Supabase:", data);
+      
       toast({
         title: "Inscription réussie",
         description: `Votre inscription à l'événement a été enregistrée`
       });
       
       navigate("/driver");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error registering for event:", error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de l'inscription",
+        description: `Une erreur est survenue lors de l'inscription: ${error.message || "Erreur inconnue"}`,
         variant: "destructive",
       });
     } finally {

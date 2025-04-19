@@ -5,8 +5,7 @@ import { NavigationButtons } from "./components/NavigationButtons";
 import { useRegistration } from "@/hooks/use-registration";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { EventList } from "./components/EventList";
+import { useEffect } from "react";
 
 export type EventType = "rally" | "hillclimb" | "slalom";
 
@@ -31,9 +30,11 @@ const RegistrationForm = () => {
     setShowNewEquipmentForm,
     setEventDetails,
   } = useRegistration();
-  
-  const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log("RegistrationForm rendu. Event details:", eventDetails);
+  }, [eventDetails]);
+  
   return (
     <div className="container mx-auto p-6">
       <Card className="w-full max-w-4xl mx-auto">
@@ -90,5 +91,8 @@ const RegistrationForm = () => {
     </div>
   );
 };
+
+// Import après le composant pour éviter les problèmes de remontée des dépendances
+import { EventList } from "./components/EventList";
 
 export default RegistrationForm;

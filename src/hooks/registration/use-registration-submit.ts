@@ -9,7 +9,6 @@ import { EventType } from "@/pages/Registration/RegistrationForm";
 interface RegistrationData {
   driver_id: string;
   vehicle_id: string;
-  driver_info: any;
   driver_equipment_id?: string;
   status: string;
   rally_id: string | null;
@@ -120,11 +119,26 @@ export const useRegistrationSubmit = () => {
     try {
       setSubmitting(true);
       
+      // Debug: Récupérer le schéma de la table registrations
+      const { data: tableInfo, error: tableError } = await supabase
+        .from('registrations')
+        .select('*')
+        .limit(1);
+      
+      if (tableInfo && tableInfo.length > 0) {
+        console.log("Schéma de la table registrations:", Object.keys(tableInfo[0] || {}));
+      } else {
+        console.log("Aucune donnée dans la table registrations");
+      }
+      
+      if (tableError) {
+        console.error("Erreur lors de la récupération du schéma:", tableError);
+      }
+      
       // Initialize the registration data with mandatory fields
       const registrationData: RegistrationData = {
         driver_id: currentUserId!,
         vehicle_id: selectedVehicle!,
-        driver_info: formData,
         driver_equipment_id: selectedDriverEquipment?.id,
         status: 'pending',
         rally_id: null

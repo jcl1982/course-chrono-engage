@@ -11,7 +11,6 @@ interface RegistrationData {
   vehicle_id: string;
   driver_info: any;
   driver_equipment_id?: string;
-  co_driver_equipment_id?: string | null;
   status: string;
   rally_id: string | null;
   competition_id?: string;
@@ -127,7 +126,6 @@ export const useRegistrationSubmit = () => {
         vehicle_id: selectedVehicle!,
         driver_info: formData,
         driver_equipment_id: selectedDriverEquipment?.id,
-        co_driver_equipment_id: eventType === "rally" ? selectedCopilotEquipment?.id : null,
         status: 'pending',
         rally_id: null
       };

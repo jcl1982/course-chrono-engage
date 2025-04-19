@@ -42,19 +42,21 @@ const RallyList = ({ userId }: RallyListProps) => {
       if (compError) throw compError;
 
       // Properly format rallies with type property
-      const formattedRallies: Event[] = rallies ? rallies.map(rally => ({
+      const formattedRallies: Event[] = (rallies || []).map(rally => ({
         ...rally,
         type: 'rally' as const
-      })) : [];
+      }));
 
       // Format competitions and ensure the type is properly typed as a union type
-      const formattedCompetitions: Event[] = competitions ? competitions.map(comp => ({
+      const formattedCompetitions: Event[] = (competitions || []).map(comp => ({
         ...comp,
         // Ensure 'type' is one of the allowed values in the Event interface
         type: (comp.type === 'hillclimb' || comp.type === 'slalom') 
-          ? comp.type 
-          : 'hillclimb' // Default fallback if type is unexpected
-      })) : [];
+          ? comp.type as 'hillclimb' | 'slalom'
+          : 'hillclimb' as const, // Default fallback if type is unexpected
+        // Ensure status is of type CompetitionStatus
+        status: comp.status as CompetitionStatus
+      }));
       
       return [...formattedRallies, ...formattedCompetitions];
     }

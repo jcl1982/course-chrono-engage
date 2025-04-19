@@ -6,8 +6,8 @@ import { useRegistration } from "@/hooks/use-registration";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { RallySelector } from "./components/RallySelector";
+import { EventTypeSelector } from "./components/EventTypeSelector";
 
 export type EventType = "rally" | "hillclimb" | "slalom";
 
@@ -32,6 +32,7 @@ const RegistrationForm = () => {
     handleSelectEquipment,
     setShowNewEquipmentForm,
     setSelectedRally,
+    setEventType,
   } = useRegistration();
   
   const navigate = useNavigate();
@@ -46,7 +47,14 @@ const RegistrationForm = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {!rallyId && (
+          {/* Event Type Selector */}
+          <EventTypeSelector 
+            selectedType={eventType} 
+            onTypeSelect={setEventType} 
+          />
+
+          {/* Rally Selector - only show for rally type events */}
+          {eventType === "rally" && !rallyId && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-4">Sélection du Rallye</h3>
               <RallySelector 
@@ -56,7 +64,7 @@ const RegistrationForm = () => {
             </div>
           )}
 
-          {rallyDetails ? (
+          {(rallyDetails || eventType !== "rally") ? (
             <>
               <RegistrationTabs
                 selectedTab={selectedTab}
@@ -71,6 +79,7 @@ const RegistrationForm = () => {
                 selectedDriverEquipment={selectedDriverEquipment}
                 selectedCopilotEquipment={selectedCopilotEquipment}
                 onPersonalInfoSubmit={handlePersonalInfoSubmit}
+                eventType={eventType}
               />
               
               <NavigationButtons
@@ -81,7 +90,7 @@ const RegistrationForm = () => {
                 submitting={submitting}
               />
             </>
-          ) : !rallyId && (
+          ) : eventType === "rally" && !rallyId && (
             <Alert variant="destructive" className="mt-6">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>

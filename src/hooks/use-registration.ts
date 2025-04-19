@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { EventType } from "@/pages/Registration/RegistrationForm";
 import { useParams, useNavigate } from "react-router-dom";
@@ -125,14 +126,16 @@ export const useRegistration = () => {
       return false;
     }
     
-    if (!rallyId || !rallyDetails) {
-      toast({
-        title: "Rallye non spécifié",
-        description: "Aucun rallye sélectionné pour l'inscription",
-        variant: "destructive",
-      });
-      navigate("/");
-      return false;
+    // Only validate rally for rally type events
+    if (eventType === "rally") {
+      if (!rallyId && !rallyDetails) {
+        toast({
+          title: "Rallye non spécifié",
+          description: "Aucun rallye sélectionné pour l'inscription",
+          variant: "destructive",
+        });
+        return false;
+      }
     }
     
     if (!selectedVehicle) {
@@ -177,12 +180,13 @@ export const useRegistration = () => {
       
       const registrationData = {
         driver_id: currentUserId,
-        rally_id: rallyId,
+        rally_id: eventType === "rally" ? rallyId || rallyDetails?.id : null,
         vehicle_id: selectedVehicle,
         driver_info: formData,
         driver_equipment_id: selectedDriverEquipment?.id,
         co_driver_equipment_id: selectedCopilotEquipment?.id || null,
-        status: 'pending'
+        status: 'pending',
+        event_type: eventType
       };
       
       const { error, data } = await supabase
@@ -194,12 +198,12 @@ export const useRegistration = () => {
 
       toast({
         title: "Inscription réussie",
-        description: "Votre inscription au rallye a été enregistrée"
+        description: `Votre inscription à l'événement a été enregistrée`
       });
       
       navigate("/driver");
     } catch (error) {
-      console.error("Error registering for rally:", error);
+      console.error("Error registering for event:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'inscription",
@@ -238,5 +242,6 @@ export const useRegistration = () => {
     handleSelectEquipment,
     setShowNewEquipmentForm,
     setSelectedRally,
+    setEventType,
   };
 };

@@ -12,8 +12,8 @@ export const useRegistrationSubmit = () => {
 
   const validateSubmission = (
     currentUserId: string | null,
-    rallyId: string | null,
-    rallyDetails: any,
+    eventId: string | null,
+    eventDetails: any,
     selectedVehicle: string | null,
     formData: any,
     selectedDriverEquipment: any,
@@ -28,16 +28,13 @@ export const useRegistrationSubmit = () => {
       return false;
     }
     
-    // Only validate rally for rally type events
-    if (eventType === "rally") {
-      if (!rallyId && !rallyDetails) {
-        toast({
-          title: "Rallye non spécifié",
-          description: "Aucun rallye sélectionné pour l'inscription",
-          variant: "destructive",
-        });
-        return false;
-      }
+    if (!eventId && !eventDetails) {
+      toast({
+        title: "Événement non spécifié",
+        description: "Aucun événement sélectionné pour l'inscription",
+        variant: "destructive",
+      });
+      return false;
     }
     
     if (!selectedVehicle) {
@@ -72,8 +69,8 @@ export const useRegistrationSubmit = () => {
 
   const handleSubmit = async (
     currentUserId: string | null,
-    rallyId: string | null,
-    rallyDetails: any,
+    eventId: string | null,
+    eventDetails: any,
     selectedVehicle: string | null,
     formData: any,
     selectedDriverEquipment: any,
@@ -82,7 +79,7 @@ export const useRegistrationSubmit = () => {
   ) => {
     if (submitting) return;
     
-    if (!validateSubmission(currentUserId, rallyId, rallyDetails, selectedVehicle, formData, selectedDriverEquipment, eventType)) {
+    if (!validateSubmission(currentUserId, eventId, eventDetails, selectedVehicle, formData, selectedDriverEquipment, eventType)) {
       return;
     }
 
@@ -91,7 +88,6 @@ export const useRegistrationSubmit = () => {
       
       const registrationData = {
         driver_id: currentUserId,
-        rally_id: eventType === "rally" ? rallyId || rallyDetails?.id : null,
         vehicle_id: selectedVehicle,
         driver_info: formData,
         driver_equipment_id: selectedDriverEquipment?.id,
@@ -100,12 +96,22 @@ export const useRegistrationSubmit = () => {
         event_type: eventType
       };
       
+      // Ajouter le champ approprié en fonction du type d'événement
+      if (eventType === "rally") {
+        registrationData['rally_id'] = eventId || eventDetails?.id;
+      } else if (eventType === "hillclimb" || eventType === "slalom") {
+        registrationData['competition_id'] = eventId || eventDetails?.id;
+      }
+      
       const { error } = await supabase
         .from('registrations')
         .insert([registrationData])
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Erreur détaillée:", error);
+        throw error;
+      }
 
       toast({
         title: "Inscription réussie",

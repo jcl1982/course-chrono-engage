@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { BackButton } from "@/components/navigation/BackButton";
 
 const CalendarPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -29,7 +30,10 @@ const CalendarPage = () => {
     <div className="min-h-screen bg-black text-white">
       <header className="bg-[#222222] shadow-sm border-b border-red-800">
         <div className="container mx-auto py-4 px-4 md:px-6">
-          <h1 className="text-3xl font-bold text-red-500">Calendrier des Rallyes</h1>
+          <div className="flex items-center gap-4 mb-2">
+            <BackButton />
+            <h1 className="text-3xl font-bold text-red-500">Calendrier des Rallyes</h1>
+          </div>
           <p className="text-gray-300">Consultez les dates des prochains événements</p>
         </div>
       </header>

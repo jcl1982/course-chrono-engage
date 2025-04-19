@@ -3,18 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { OrganizerGuard } from "@/components/auth/OrganizerGuard";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Users } from "lucide-react";
-import { Link } from "react-router-dom";
 import { ParticipantDetailsDialog } from "@/components/participant/ParticipantDetailsDialog";
+import { BackButton } from "@/components/navigation/BackButton";
 
 const ParticipantManager = () => {
   const { toast } = useToast();
@@ -47,11 +40,7 @@ const ParticipantManager = () => {
       <div className="min-h-screen bg-black text-white">
         <div className="container mx-auto p-8">
           <div className="flex items-center gap-4 mb-6">
-            <Link to="/organizer">
-              <Button variant="outline" size="icon" className="border-red-500 text-red-500 hover:bg-red-950">
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-            </Link>
+            <BackButton />
             <h1 className="text-3xl font-bold text-red-500 flex items-center gap-3">
               <Users className="h-8 w-8" />
               Gestion des Participants

@@ -47,8 +47,14 @@ const RallyList = ({ userId }: RallyListProps) => {
         type: 'rally' as const
       })) : [];
 
-      // Combine both arrays ensuring they're not null
-      const formattedCompetitions: Event[] = competitions || [];
+      // Format competitions and ensure the type is properly typed as a union type
+      const formattedCompetitions: Event[] = competitions ? competitions.map(comp => ({
+        ...comp,
+        // Ensure 'type' is one of the allowed values in the Event interface
+        type: (comp.type === 'hillclimb' || comp.type === 'slalom') 
+          ? comp.type 
+          : 'hillclimb' // Default fallback if type is unexpected
+      })) : [];
       
       return [...formattedRallies, ...formattedCompetitions];
     }

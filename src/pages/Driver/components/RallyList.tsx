@@ -1,100 +1,105 @@
-import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+
+import { useQuery } from "@tanstack/react-query";
+import { Flag, Mountain, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import DashboardCard from "./DashboardCard";
+import { CompetitionStatus } from "@/types/competition";
 
-const RallyList = ({ userId }: { userId?: string }) => {
-  const [rallies, setRallies] = useState<any[]>([]);
-  const [registeredRallies, setRegisteredRallies] = useState<string[]>([]);
-  const { toast } = useToast();
-  const navigate = useNavigate();
+interface Event {
+  id: string;
+  name: string;
+  type: 'rally' | 'hillclimb' | 'slalom';
+  date: string;
+  location: string;
+  status: CompetitionStatus;
+}
 
-  useEffect(() => {
-    if (userId) {
-      fetchRallies();
-      fetchUserRegistrations();
+interface RallyListProps {
+  userId?: string;
+}
+
+const RallyList = ({ userId }: RallyListProps) => {
+  const { data: events = [], isLoading } = useQuery({
+    queryKey: ['events'],
+    queryFn: async () => {
+      // Fetch rallies
+      const { data: rallies, error: rallyError } = await supabase
+        .from('rallies')
+        .select('id, name, start_date as date, location, status')
+        .eq('is_upcoming', true)
+        .order('start_date');
+
+      if (rallyError) throw rallyError;
+
+      // Fetch competitions (hillclimb and slalom)
+      const { data: competitions, error: compError } = await supabase
+        .from('competitions')
+        .select('id, name, type, date, location, status')
+        .in('status', ['DRAFT', 'PUBLISHED'])
+        .gte('date', new Date().toISOString())
+        .order('date');
+
+      if (compError) throw compError;
+
+      const formattedRallies = (rallies || []).map(rally => ({
+        ...rally,
+        type: 'rally' as const
+      }));
+
+      return [...formattedRallies, ...(competitions || [])];
     }
-  }, [userId]);
+  });
 
-  const fetchRallies = async () => {
-    const { data, error } = await supabase
-      .from('rallies')
-      .select('*')
-      .eq('registration_open', true)
-      .order('start_date', { ascending: true });
-
-    if (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de charger les rallyes",
-        variant: "destructive",
-      });
-      return;
+  const getEventIcon = (type: string) => {
+    switch (type) {
+      case 'rally':
+        return <Trophy className="h-4 w-4 text-red-500" />;
+      case 'hillclimb':
+        return <Mountain className="h-4 w-4 text-red-500" />;
+      case 'slalom':
+        return <Flag className="h-4 w-4 text-red-500" />;
+      default:
+        return null;
     }
-
-    setRallies(data || []);
   };
 
-  const fetchUserRegistrations = async () => {
-    if (!userId) return;
-
-    const { data, error } = await supabase
-      .from('registrations')
-      .select('rally_id')
-      .eq('driver_id', userId);
-
-    if (error) {
-      console.error("Error fetching registrations:", error);
-      return;
+  const getEventType = (type: string) => {
+    switch (type) {
+      case 'rally':
+        return 'Rallye';
+      case 'hillclimb':
+        return 'Course de côte';
+      case 'slalom':
+        return 'Slalom';
+      default:
+        return type;
     }
-
-    setRegisteredRallies(data.map(reg => reg.rally_id));
   };
 
-  const handleRegisterClick = (rallyId: string) => {
-    if (!userId) {
-      toast({
-        title: "Non authentifié",
-        description: "Veuillez vous connecter pour vous inscrire à un rallye",
-        variant: "destructive",
-      });
-      navigate("/auth");
-      return;
-    }
-    
-    navigate(`/registration/${rallyId}`);
-  };
-
-  if (!rallies.length) {
-    return <p className="text-gray-400">Aucun rallye ouvert aux inscriptions</p>;
+  if (isLoading) {
+    return <p className="text-gray-400">Chargement des épreuves...</p>;
   }
 
   return (
-    <div className="space-y-2">
-      {rallies.map((rally) => (
-        <div
-          key={rally.id}
-          className="p-3 rounded-lg bg-[#2a2a2a] hover:bg-[#333333] transition-colors"
-        >
-          <h3 className="font-medium text-red-400">{rally.name}</h3>
-          <p className="text-sm text-gray-400">
-            Date: {new Date(rally.start_date).toLocaleDateString()}
-          </p>
-          <p className="text-sm text-gray-400 mb-2">
-            Lieu: {rally.location}
-          </p>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="w-full border-red-800 text-red-400 hover:bg-red-900/20"
-            onClick={() => handleRegisterClick(rally.id)}
-            disabled={registeredRallies.includes(rally.id)}
+    <div className="space-y-4">
+      {events.length === 0 ? (
+        <p className="text-gray-400">Aucune épreuve à venir</p>
+      ) : (
+        events.map((event) => (
+          <div
+            key={event.id}
+            className="flex items-center gap-3 p-2 rounded-lg bg-black/20 border border-red-900/20 hover:bg-black/30 transition-colors"
           >
-            {registeredRallies.includes(rally.id) ? 'Déjà inscrit' : 'S\'inscrire'}
-          </Button>
-        </div>
-      ))}
+            {getEventIcon(event.type)}
+            <div className="flex-1">
+              <h3 className="font-medium text-white">{event.name}</h3>
+              <p className="text-sm text-gray-400">
+                {getEventType(event.type)} - {event.location} - {new Date(event.date).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+        ))
+      )}
     </div>
   );
 };

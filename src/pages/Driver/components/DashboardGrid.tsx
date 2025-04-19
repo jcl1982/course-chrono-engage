@@ -18,8 +18,8 @@ const DashboardGrid: FC<DashboardGridProps> = ({ userId }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <DashboardCard
-        title="Rallyes à venir"
-        description="Liste des rallyes ouverts aux inscriptions"
+        title="Épreuves à venir"
+        description="Liste des épreuves ouvertes aux inscriptions"
       >
         <RallyList userId={userId} />
       </DashboardCard>

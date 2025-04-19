@@ -34,7 +34,6 @@ const SlalomManager = () => {
 
       if (error) throw error;
       
-      // Transform the raw data to match the Competition type
       return data.map((item: SupabaseCompetition): Competition => ({
         id: item.id,
         name: item.name,
@@ -87,6 +86,30 @@ const SlalomManager = () => {
     }
   };
 
+  const handleToggleRegistration = async (competition: Competition, open: boolean) => {
+    try {
+      const { error } = await supabase
+        .from("competitions")
+        .update({ registration_open: open })
+        .eq("id", competition.id);
+
+      if (error) throw error;
+
+      await queryClient.invalidateQueries({ queryKey: ["competitions", "slalom"] });
+      toast({
+        title: `Inscriptions ${open ? "ouvertes" : "fermées"}`,
+        description: `Les inscriptions sont maintenant ${open ? "ouvertes" : "fermées"} pour ${competition.name}`,
+      });
+    } catch (error) {
+      console.error("Error updating registration status:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la mise à jour des inscriptions",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <OrganizerGuard>
       <div className="min-h-screen bg-black text-white p-8">
@@ -111,6 +134,7 @@ const SlalomManager = () => {
           competitions={competitions || []}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onToggleRegistration={handleToggleRegistration}
           isLoading={isLoading}
         />
 

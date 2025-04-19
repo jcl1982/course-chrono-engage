@@ -13,9 +13,9 @@ import { Pencil, Trash } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 interface CompetitionTableProps {
-  competitions: any[];
-  onEdit: (competition: any) => void;
-  onDelete: (competition: any) => void;
+  competitions: Competition[];
+  onEdit: (competition: Competition) => void;
+  onDelete: (competition: Competition) => void;
   isLoading?: boolean;
 }
 

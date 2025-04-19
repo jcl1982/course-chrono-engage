@@ -8,23 +8,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Flag, Mountain, Trophy } from "lucide-react";
-
-interface Event {
-  id: string;
-  name: string;
-  type: 'rally' | 'hillclimb' | 'slalom';
-  date: string;
-  location: string;
-  status: string;
-}
+import { EventType } from "../RegistrationForm";
 
 interface EventTypeSelectorProps {
-  onEventSelect: (event: Event) => void;
-  selectedEvent?: Event;
-  events: Event[];
+  onSelect: (type: EventType) => void;
+  selected: EventType;
 }
 
-export const EventTypeSelector = ({ onEventSelect, selectedEvent, events }: EventTypeSelectorProps) => {
+export const EventTypeSelector = ({ onSelect, selected }: EventTypeSelectorProps) => {
   const getEventIcon = (type: string) => {
     switch (type) {
       case 'rally':
@@ -51,40 +42,23 @@ export const EventTypeSelector = ({ onEventSelect, selectedEvent, events }: Even
     }
   };
 
-  if (events.length === 0) {
-    return (
-      <Card>
-        <CardContent className="pt-6">
-          <p className="text-center text-muted-foreground">
-            Aucune épreuve n'est actuellement ouverte aux inscriptions
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const eventTypes: EventType[] = ['rally', 'hillclimb', 'slalom'];
 
   return (
     <div className="w-full max-w-sm mx-auto">
       <Select 
-        value={selectedEvent?.id} 
-        onValueChange={(eventId) => {
-          const event = events.find(e => e.id === eventId);
-          if (event) {
-            onEventSelect(event);
-          }
-        }}
+        value={selected} 
+        onValueChange={(value) => onSelect(value as EventType)}
       >
         <SelectTrigger>
-          <SelectValue placeholder="Sélectionner une épreuve" />
+          <SelectValue placeholder="Sélectionner un type d'épreuve" />
         </SelectTrigger>
         <SelectContent>
-          {events.map((event) => (
-            <SelectItem key={event.id} value={event.id}>
+          {eventTypes.map((type) => (
+            <SelectItem key={type} value={type}>
               <div className="flex items-center gap-2">
-                {getEventIcon(event.type)}
-                <span>
-                  {event.name} - {getEventTypeName(event.type)} - {new Date(event.date).toLocaleDateString()}
-                </span>
+                {getEventIcon(type)}
+                <span>{getEventTypeName(type)}</span>
               </div>
             </SelectItem>
           ))}

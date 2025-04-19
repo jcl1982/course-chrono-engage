@@ -4,6 +4,7 @@ import { Flag, Mountain, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardCard from "./DashboardCard";
 import { CompetitionStatus } from "@/types/competition";
+import { toast } from "@/components/ui/use-toast";
 
 interface Event {
   id: string;
@@ -22,49 +23,60 @@ const RallyList = ({ userId }: RallyListProps) => {
   const { data: events = [], isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: async () => {
-      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+      try {
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
-      // Fetch rallies after today
-      const { data: rallies, error: rallyError } = await supabase
-        .from('rallies')
-        .select('id, name, start_date as date, location, status')
-        .gte('start_date', today)
-        .order('start_date');
+        // Fetch rallies after today
+        const { data: rallies, error: rallyError } = await supabase
+          .from('rallies')
+          .select('id, name, start_date, location, status')
+          .gte('start_date', today)
+          .order('start_date');
 
-      if (rallyError) throw rallyError;
+        if (rallyError) throw rallyError;
 
-      // Fetch competitions after today
-      const { data: competitions, error: compError } = await supabase
-        .from('competitions')
-        .select('id, name, type, date, location, status')
-        .gte('date', today)
-        .order('date');
+        // Fetch competitions after today
+        const { data: competitions, error: compError } = await supabase
+          .from('competitions')
+          .select('id, name, type, date, location, status')
+          .gte('date', today)
+          .order('date');
 
-      if (compError) throw compError;
+        if (compError) throw compError;
 
-      // Properly format rallies with type property
-      const formattedRallies: Event[] = (rallies || []).map((rally: any) => ({
-        id: rally.id,
-        name: rally.name,
-        date: rally.date,
-        location: rally.location,
-        status: rally.status as CompetitionStatus,
-        type: 'rally' as const
-      }));
+        // Properly format rallies with type property
+        const formattedRallies = (rallies || []).map((rally: any) => ({
+          id: rally.id,
+          name: rally.name,
+          date: rally.start_date, // Using start_date directly from rallies table
+          location: rally.location,
+          status: rally.status as CompetitionStatus,
+          type: 'rally' as const
+        }));
 
-      // Format competitions and ensure the type is properly typed as a union type
-      const formattedCompetitions: Event[] = (competitions || []).map((comp: any) => ({
-        id: comp.id,
-        name: comp.name,
-        date: comp.date,
-        location: comp.location,
-        status: comp.status as CompetitionStatus,
-        type: (comp.type === 'hillclimb' || comp.type === 'slalom') 
-          ? comp.type as 'hillclimb' | 'slalom'
-          : 'hillclimb' as const // Default fallback if type is unexpected
-      }));
-      
-      return [...formattedRallies, ...formattedCompetitions];
+        // Format competitions
+        const formattedCompetitions = (competitions || []).map((comp: any) => ({
+          id: comp.id,
+          name: comp.name,
+          date: comp.date,
+          location: comp.location,
+          status: comp.status as CompetitionStatus,
+          type: (comp.type === 'hillclimb' || comp.type === 'slalom') 
+            ? comp.type as 'hillclimb' | 'slalom'
+            : 'hillclimb' as const // Default fallback if type is unexpected
+        }));
+        
+        const allEvents = [...formattedRallies, ...formattedCompetitions];
+        return allEvents;
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger les épreuves",
+          variant: "destructive",
+        });
+        return [];
+      }
     }
   });
 

@@ -22,21 +22,22 @@ const RallyList = ({ userId }: RallyListProps) => {
   const { data: events = [], isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: async () => {
-      // Fetch rallies
+      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+      // Fetch rallies after today
       const { data: rallies, error: rallyError } = await supabase
         .from('rallies')
         .select('id, name, start_date as date, location, status')
-        .eq('is_upcoming', true)
+        .gte('start_date', today)
         .order('start_date');
 
       if (rallyError) throw rallyError;
 
-      // Fetch competitions (hillclimb and slalom)
+      // Fetch competitions after today
       const { data: competitions, error: compError } = await supabase
         .from('competitions')
         .select('id, name, type, date, location, status')
-        .in('status', ['DRAFT', 'PUBLISHED'])
-        .gte('date', new Date().toISOString())
+        .gte('date', today)
         .order('date');
 
       if (compError) throw compError;

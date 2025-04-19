@@ -25,6 +25,7 @@ const basePersonalInfoSchema = {
   emergencyContact: emergencyContactSchema,
 };
 
+// Pour les épreuves autres que les rallyes (course de côte, slalom), le copilote est optionnel
 export const personalInfoSchema = z.object({
   ...basePersonalInfoSchema,
   asa: z.string().min(2, "L'ASA doit contenir au moins 2 caractères"),

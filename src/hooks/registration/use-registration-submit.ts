@@ -77,6 +77,16 @@ export const useRegistrationSubmit = () => {
       return false;
     }
     
+    // Pour les rallyes, vérifier l'équipement du copilote
+    if (eventType === "rally" && !formData.coPilote) {
+      toast({
+        title: "Informations copilote requises",
+        description: "Veuillez compléter les informations du copilote pour les rallyes",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
     return true;
   };
 
@@ -105,17 +115,16 @@ export const useRegistrationSubmit = () => {
         vehicle_id: selectedVehicle!,
         driver_info: formData,
         driver_equipment_id: selectedDriverEquipment?.id,
-        co_driver_equipment_id: selectedCopilotEquipment?.id || null,
+        co_driver_equipment_id: eventType === "rally" ? selectedCopilotEquipment?.id : null,
         status: 'pending',
-        rally_id: null, // Initialize with null
-        event_type: eventType // Add event type
+        rally_id: null
       };
       
       // Assign the correct ID based on event type
       if (eventType === "rally") {
         registrationData.rally_id = eventId || eventDetails?.id;
       } else if (eventType === "hillclimb" || eventType === "slalom") {
-        // For hillclimb or slalom, rally_id remains null and we set competition_id
+        // Pour les courses de côte ou slaloms, rally_id reste null et on définit competition_id
         registrationData.competition_id = eventId || eventDetails?.id;
         registrationData.event_type = eventType;
       }

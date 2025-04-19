@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -106,7 +107,8 @@ export const useRegistrationSubmit = () => {
         driver_equipment_id: selectedDriverEquipment?.id,
         co_driver_equipment_id: selectedCopilotEquipment?.id || null,
         status: 'pending',
-        rally_id: null // Initialize with null
+        rally_id: null, // Initialize with null
+        event_type: eventType // Add event type
       };
       
       // Assign the correct ID based on event type

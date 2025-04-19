@@ -664,8 +664,10 @@ export type Database = {
       registrations: {
         Row: {
           co_driver_id: string | null
+          competition_id: string | null
           created_at: string
           driver_id: string
+          event_type: string | null
           id: string
           rally_id: string
           status: string
@@ -674,8 +676,10 @@ export type Database = {
         }
         Insert: {
           co_driver_id?: string | null
+          competition_id?: string | null
           created_at?: string
           driver_id: string
+          event_type?: string | null
           id?: string
           rally_id: string
           status?: string
@@ -684,8 +688,10 @@ export type Database = {
         }
         Update: {
           co_driver_id?: string | null
+          competition_id?: string | null
           created_at?: string
           driver_id?: string
+          event_type?: string | null
           id?: string
           rally_id?: string
           status?: string
@@ -693,6 +699,13 @@ export type Database = {
           vehicle_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "registrations_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competitions"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "registrations_rally_id_fkey"
             columns: ["rally_id"]

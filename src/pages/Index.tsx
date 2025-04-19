@@ -1,7 +1,7 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarDays } from "lucide-react";
 
 const Index = () => {
   return (
@@ -40,31 +40,6 @@ const Index = () => {
 
         <main className="container mx-auto py-8 px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="bg-gradient-to-br from-red-900/50 to-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <CalendarDays className="h-5 w-5 text-red-500" />
-                  <CardTitle className="text-red-500">Inscriptions Ouvertes</CardTitle>
-                </div>
-                <CardDescription className="text-gray-400">
-                  Épreuves actuellement ouvertes aux inscriptions
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300">
-                  Consultez la liste des épreuves dont les inscriptions sont actuellement ouvertes 
-                  et inscrivez-vous directement en ligne.
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Link to="/registration">
-                  <Button variant="destructive" className="bg-red-700 hover:bg-red-800">
-                    Voir les épreuves
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-
             <Card className="bg-[#1a1a1a] border-red-900 text-white hover:bg-[#222222] transition-colors">
               <CardHeader>
                 <CardTitle className="text-red-500">Espace Organisateur</CardTitle>
